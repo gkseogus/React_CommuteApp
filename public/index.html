@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!-- gapi를 로드하기 위한 스크립트 -->
+    <script src="https://apis.google.com/js/api.js"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -27,6 +31,9 @@
     <title>React App</title>
   </head>
   <body>
+    <!--Add buttons to initiate auth sequence and sign out-->
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
