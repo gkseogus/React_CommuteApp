@@ -1,63 +1,10 @@
-import React from 'react';
-import { Table } from 'antd';
+import React, { useEffect } from 'react';
 import 'antd/dist/antd.css';
-
-const getData = async () => {
-  try{
-      // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
-      const res = await fetch(
-        "https://api.apispreadsheets.com/data/H3MBWjtT5hpMNLS5/"
-      );
-      // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
-      const dataData = await res.json();
-      console.log("API data",dataData.data);
-  } catch(err){
-      console.log('error:', err);
-  }
-}
-
-const data = [
-  {
-    key: 1,
-    team: 'PUB',
-    user: '강부민',
-    checkIn: 2222222,
-    checkOut: 3333333,
-    workTime: 11111111,
-    workState: '근무미달',
-    homeWork: '회사',
-  },
-  {
-    key: 2,
-    team: 'Visual',
-    user: '김진홍',
-    checkIn: 222,
-    checkOut: 3333323333,
-    workTime: 44,
-    workState: '근무미달',
-    homeWork: '회사',
-  },
-  {
-    key: 3,
-    team: 'WFE',
-    user: '구희섭',
-    checkIn: 2222222323,
-    checkOut: 333333311,
-    workTime: 11111111444,
-    workState: '정상',
-    homeWork: '재택',
-  },
-  {
-    key: 4,
-    team: 'Visual',
-    user: '권영애',
-    checkIn: 222222,
-    checkOut: 3333333,
-    workTime: 11111111,
-    workState: '정상',
-    homeWork: '재택',
-  },
-];
+import { Table } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRequest } from '../../store/inventory/action';
+import { ApplicationState } from '../../store';
+import { Inventory } from '../../store/inventory/types';
 
 const columns:any = [
   {
@@ -160,15 +107,73 @@ const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
   console.log('params', pagination, filters, sorter, extra);
 }
 
-const homePage= (_props: any) => {
-  getData()
+const HomePage = (_props: any) => {
+
+  const dispatch = useDispatch()
+
+  const getData = async () => {
+    try{
+        // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
+        const res = await fetch(
+          "https://api.apispreadsheets.com/data/z6SgjWOFDfBTf3OL/"
+        );
+        // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
+        const dataData = await res.json();
+        console.log("API get data",dataData.data);
+        dispatch(fetchRequest(dataData));
+    } catch(err){
+        console.log('error:', err);
+    }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const newData = useSelector((state: ApplicationState) => state.inventory.data );
+  console.log('test', newData);
+
+  const NEWW = (() => {
+    console.log('test2', newData[0].team)
+    if(!newData) return[];
+    return [
+      {
+        key: "1",
+        team: newData[0].team
+      }
+    ];
+  })
+
+  const data = [
+    {
+      key: 1,
+      team: newData[0]?.team,
+      user: '강부민',
+      checkIn: 2222222,
+      checkOut: 3333333,
+      workTime: '11111111',
+      workState: '근무미달',
+      homeWork: '회사',
+    },
+    {
+      key: 2,
+      team: 'Visual',
+      user: '김진홍',
+      checkIn: 222,
+      checkOut: 3333323333,
+      workTime: '44',
+      workState: '정상',
+      homeWork: '재택',
+    }
+  ];
+
   return (
-    <Table
-      columns={columns}
-      dataSource={data} 
-      onChange={onChange}
-    />
+      <Table
+        columns={columns}
+        dataSource={data} 
+        onChange={onChange}
+      />
   );
 }
 
-export default homePage;
+export default HomePage;
