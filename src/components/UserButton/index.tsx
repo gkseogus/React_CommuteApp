@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { Button } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { checkInAction, checkOutAction } from '../../store/inventory/action';
 
 const Container = styled.div`
     position: fixed;
@@ -30,17 +32,22 @@ const UserButton = (_props: any) => {
     
     const [disable, setDisable] = useState(false);
 
+    const dispatch = useDispatch();
+    const dispatch2 = useDispatch();
+    
     const btnDisable = () => {
         setDisable(true)
         // 데이터 삽입을 위한 format 
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');
-        console.log('newDate',newDate)
+        console.log('출근시간',newDate)
+        dispatch(checkInAction(newDate))
     }
 
     const reverseDisable = () => {
         setDisable(false)
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');
-        console.log('newDate',newDate)
+        console.log('퇴근시간',newDate)
+        dispatch2(checkOutAction(newDate))
     }
     
     // const handleSubmit = async (e:any) => {
