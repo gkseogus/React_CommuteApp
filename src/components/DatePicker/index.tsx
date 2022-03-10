@@ -5,11 +5,11 @@ import { DatePicker, Space } from 'antd';
 const { RangePicker } = DatePicker;
 
 const HomeDatePicker = (_props: any) => {
-  return(
-  <Space direction="vertical" size={12}>
-    <RangePicker />
-  </Space>
-  )
-}
+  return (
+    <Space direction="vertical" size={12}>
+      <RangePicker onChange={_props.onChange} />
+    </Space>
+  );
+};
 
-export default HomeDatePicker
+export default HomeDatePicker;
