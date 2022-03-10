@@ -1,13 +1,14 @@
-import { Table } from 'antd';
-import 'antd/dist/antd.css';
-import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
+import 'antd/dist/antd.css';
+import { Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { ApplicationState } from '../../store';
 import { fetchRequest } from '../../store/inventory/action';
+import { ApplicationState } from '../../store';
 import HomeDatePicker from '../DatePicker';
 import UserButton from '../UserButton';
 import UserSearch from '../UserSearch';
+import { Moment } from 'moment';
+import moment from 'moment';
 
 const columns: any = [
   {
@@ -95,20 +96,20 @@ const columns: any = [
       record.workState.indexOf(value) === 0,
   },
   {
-    title: '출근 상태',
-    dataIndex: 'working',
+    title: '재택 여부',
+    dataIndex: 'homeWork',
     filters: [
       {
-        text: '출근',
-        value: '출근',
+        text: '회사',
+        value: '회사',
       },
       {
-        text: '퇴근',
-        value: '퇴근',
+        text: '재택',
+        value: '재택',
       },
     ],
-    onFilter: (value: any, record: { working: string | any[] }) =>
-      record.working.indexOf(value) === 0,
+    onFilter: (value: any, record: { homeWork: string | any[] }) =>
+      record.homeWork.indexOf(value) === 0,
   },
 ];
 
@@ -123,7 +124,7 @@ const HomePage = (_props: any) => {
     try {
       // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
       const res = await fetch(
-        'https://api.apispreadsheets.com/data/pcTuaSReyNUVJJnR/'
+        'https://api.apispreadsheets.com/data/U3EG1z3vGIkL3h8Q/'
       );
       // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
       const dataData = await res.json();
@@ -147,32 +148,33 @@ const HomePage = (_props: any) => {
 
   // 이름, 날짜로 필터링하는 로직 시작
   const data = (newData ?? [])
-    // 이름이 입력됐을 경우 이름과 매칭하는 유저만 필터링
+    // 이름이 입력됐을 경우 이름과 매칭하는 유저만 필터링 -> i = newData
     .filter((i) => (name ? i.user.includes(name) : true))
     .filter((i) => {
+      // 시간 선택이 안되었을 때 모든 항목을 테이블에 보여줌
       if (!time) {
         return true;
       }
       /**
        * moment js 가 한글이 포함될 경우 파싱을 못하기 때문에 한글 제거 [.replace(/[가-핳]/g, '')]
+       * 가나다라...처럼 조합된 한글을 찾는 표현식
        * checkIn, checkOut 값을 파싱 후
-       * 선택한 영역에 포함하는지 검사
+       * 선택한 영역에 포함하는지 검사 -> startOf('day') = day보다 작은 시,분,초를 제외시키기 위함
        */
-      const start = time.start.startOf('day');
-      const end = time.end.startOf('day');
-
       const checkIn = moment(
         String(i.checkIn).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
       ).startOf('day');
-      
       const checkOut = moment(
         String(i.checkOut).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
       ).startOf('day');
+      // 선택한 시간 범위에 checkIn 시간이 포함되거나
+      // 선택한 시간 범위에 checkOut 시간이 포함되면
+      // 해당 항목을 테이블에 보여줌
       return (
-        (checkIn.isAfter(start) || checkIn.isSame(start)) &&
-        (checkOut.isBefore(end) || checkOut.isSame(end))
+        (checkIn.isAfter(time.start) && checkIn.isBefore(time.end)) ||
+        (checkOut.isAfter(time.start) && checkOut.isBefore(time.end))
       );
     });
 
@@ -182,6 +184,7 @@ const HomePage = (_props: any) => {
       <UserButton />
       <HomeDatePicker
         onChange={(moment: Moment[]) =>
+          // 시간이 선택되면 moment배열을 start,end프로퍼티로 담는다. 선택되지 않으면 undefined
           setTime(moment ? { start: moment[0], end: moment[1] } : undefined)
         }
       />
