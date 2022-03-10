@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react';
-import 'antd/dist/antd.css';
 import { Table } from 'antd';
+import 'antd/dist/antd.css';
+import moment, { Moment } from 'moment';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRequest } from '../../store/inventory/action';
 import { ApplicationState } from '../../store';
-import { Inventory } from '../../store/inventory/types';
+import { fetchRequest } from '../../store/inventory/action';
+import HomeDatePicker from '../DatePicker';
+import UserButton from '../UserButton';
+import UserSearch from '../UserSearch';
 
-const columns:any = [
+const columns: any = [
   {
     title: '팀',
     dataIndex: 'team',
@@ -46,25 +49,29 @@ const columns:any = [
     ],
     // specify the condition of filtering result
     // here is that finding the name started with `value`
-    onFilter: (value: any, record: { team: string | any[]; }) => record.team.indexOf(value) === 0,
+    onFilter: (value: any, record: { team: string | any[] }) =>
+      record.team.indexOf(value) === 0,
   },
   {
     title: '사용자',
     dataIndex: 'user',
     defaultSortOrder: 'user',
-    sorter: (a: { user: number; }, b: { user: number; }):number  => a.user - b.user,
+    sorter: (a: { user: number }, b: { user: number }): number =>
+      a.user - b.user,
   },
   {
     title: '체크인',
     dataIndex: 'checkIn',
     defaultSortOrder: 'checkIn',
-    sorter: (a: { checkIn: number; }, b: { checkIn: number; }):number => a.checkIn - b.checkIn,
+    sorter: (a: { checkIn: number }, b: { checkIn: number }): number =>
+      a.checkIn - b.checkIn,
   },
   {
     title: '체크아웃',
     dataIndex: 'checkOut',
     defaultSortOrder: 'checkOut',
-    sorter: (a: { checkOut: number; }, b: { checkOut: number; }):number  => a.checkOut - b.checkOut,
+    sorter: (a: { checkOut: number }, b: { checkOut: number }): number =>
+      a.checkOut - b.checkOut,
   },
   {
     title: '근무시간',
@@ -84,96 +91,104 @@ const columns:any = [
         value: '정상',
       },
     ],
-    onFilter: (value: any, record: { workState: string | any[]; }) => record.workState.indexOf(value) === 0,
+    onFilter: (value: any, record: { workState: string | any[] }) =>
+      record.workState.indexOf(value) === 0,
   },
   {
-    title: '재택 여부',
+    title: '출근 상태',
     dataIndex: 'homeWork',
     filters: [
       {
-        text: '회사',
-        value: '회사',
+        text: '출근',
+        value: '출근',
       },
       {
-        text: '재택',
-        value: '재택',
+        text: '퇴근',
+        value: '퇴근',
       },
     ],
-    onFilter: (value: any, record: { homeWork: string | any[]; }) => record.homeWork.indexOf(value) === 0,
+    onFilter: (value: any, record: { homeWork: string | any[] }) =>
+      record.homeWork.indexOf(value) === 0,
   },
 ];
 
 const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
   console.log('params', pagination, filters, sorter, extra);
-}
+};
 
 const HomePage = (_props: any) => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const getData = async () => {
-    try{
-        // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
-        const res = await fetch(
-          "https://api.apispreadsheets.com/data/z6SgjWOFDfBTf3OL/"
-        );
-        // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
-        const dataData = await res.json();
-        console.log("API get data",dataData.data);
-        dispatch(fetchRequest(dataData));
-    } catch(err){
-        console.log('error:', err);
+    try {
+      // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
+      const res = await fetch(
+        'https://api.apispreadsheets.com/data/yjcil7KcW6fzFcJF/'
+      );
+      // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
+      const dataData = await res.json();
+      console.log('API get data', dataData.data);
+      dispatch(fetchRequest(dataData.data));
+    } catch (err) {
+      console.log('error:', err);
     }
-  }
+  };
 
   useEffect(() => {
     getData();
   }, []);
 
-  const newData = useSelector((state: ApplicationState) => state.inventory.data );
-  console.log('test', newData);
+  const [name, setName] = useState('');
+  const [time, setTime] = useState<{ start: Moment; end: Moment }>();
 
-  const NEWW = (() => {
-    console.log('test2', newData[0].team)
-    if(!newData) return[];
-    return [
-      {
-        key: "1",
-        team: newData[0].team
-      }
-    ];
-  })
-
-  const data = [
-    {
-      key: 1,
-      team: newData[0]?.team,
-      user: '강부민',
-      checkIn: 2222222,
-      checkOut: 3333333,
-      workTime: '11111111',
-      workState: '근무미달',
-      homeWork: '회사',
-    },
-    {
-      key: 2,
-      team: 'Visual',
-      user: '김진홍',
-      checkIn: 222,
-      checkOut: 3333323333,
-      workTime: '44',
-      workState: '정상',
-      homeWork: '재택',
-    }
-  ];
-
-  return (
-      <Table
-        columns={columns}
-        dataSource={data} 
-        onChange={onChange}
-      />
+  const newData = useSelector(
+    (state: ApplicationState) => state.inventory.data
   );
-}
+
+  // 이름, 날짜로 필터링하는 로직 시작
+  const data = (newData ?? [])
+    // 이름이 입력됐을 경우 이름과 매칭하는 유저만 필터링
+    .filter((i) => (name ? i.user.includes(name) : true))
+    .filter((i) => {
+      if (!time) {
+        return true;
+      }
+      /**
+       * moment js 가 한글이 포함될 경우 파싱을 못하기 때문에 한글 제거 [.replace(/[가-핳]/g, '')]
+       * checkIn, checkOut 값을 파싱 후
+       * 선택한 영역에 포함하는지 검사
+       */
+      const start = time.start.startOf('day');
+      const end = time.end.startOf('day');
+
+      const checkIn = moment(
+        String(i.checkIn).replace(/[가-핳]/g, ''),
+        'YYYY M DD, hh:mm:ss'
+      ).startOf('day');
+      
+      const checkOut = moment(
+        String(i.checkOut).replace(/[가-핳]/g, ''),
+        'YYYY M DD, hh:mm:ss'
+      ).startOf('day');
+      return (
+        (checkIn.isAfter(start) || checkIn.isSame(start)) &&
+        (checkOut.isBefore(end) || checkOut.isSame(end))
+      );
+    });
+
+  // 이름, 날짜 필터링 적용을 위해서 UserButton, UserSearch 컴포넌트를 HomePage로 이동
+  return (
+    <div>
+      <UserButton />
+      <HomeDatePicker
+        onChange={(moment: Moment[]) =>
+          setTime(moment ? { start: moment[0], end: moment[1] } : undefined)
+        }
+      />
+      <UserSearch onSearch={setName} />
+      <Table columns={columns} dataSource={data} onChange={onChange} />
+    </div>
+  );
+};
 
 export default HomePage;
