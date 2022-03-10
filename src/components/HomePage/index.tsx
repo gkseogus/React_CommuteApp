@@ -96,7 +96,7 @@ const columns: any = [
   },
   {
     title: '출근 상태',
-    dataIndex: 'homeWork',
+    dataIndex: 'working',
     filters: [
       {
         text: '출근',
@@ -107,8 +107,8 @@ const columns: any = [
         value: '퇴근',
       },
     ],
-    onFilter: (value: any, record: { homeWork: string | any[] }) =>
-      record.homeWork.indexOf(value) === 0,
+    onFilter: (value: any, record: { working: string | any[] }) =>
+      record.working.indexOf(value) === 0,
   },
 ];
 
@@ -123,7 +123,7 @@ const HomePage = (_props: any) => {
     try {
       // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
       const res = await fetch(
-        'https://api.apispreadsheets.com/data/yjcil7KcW6fzFcJF/'
+        'https://api.apispreadsheets.com/data/pcTuaSReyNUVJJnR/'
       );
       // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
       const dataData = await res.json();
