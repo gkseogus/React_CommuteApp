@@ -1,4 +1,4 @@
-import { Inventory, FETCH_ERROR,FETCH_SUCCESS, CHECK_IN, CHECK_OUT } from "./types";
+import { FETCH_ERROR,FETCH_SUCCESS, CHECK_IN, CHECK_OUT } from "./types";
 
 import { ActionCreator, Action, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
@@ -12,8 +12,6 @@ export type AppThunk = ActionCreator<
    null, Action<string>
   >
 >;
-
-type NewType = ThunkAction<void, ApplicationState, Inventory, Action<string>>;
 
 // apiData를 받아와 reducer에게 데이터를 전송
 export const fetchRequest: AppThunk = (item) => {
