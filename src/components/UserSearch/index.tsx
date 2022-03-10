@@ -27,7 +27,7 @@ const UserSearch = (_props: any) => {
                 color: 'black',
               }} 
             >검색</Button>
-          } // enterButton="검색"
+          } 
           allowClear
           style={{
             width: 200,
