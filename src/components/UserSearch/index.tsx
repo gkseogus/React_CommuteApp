@@ -1,6 +1,5 @@
 import { Input, Space, Button } from 'antd';
 import 'antd/dist/antd.css';
-import _ from 'lodash';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
