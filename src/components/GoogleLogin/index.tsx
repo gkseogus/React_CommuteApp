@@ -10,7 +10,9 @@ const LoginContain = styled.div`
 `
 const LoginUser = styled.div`
   position: fixed;
-  right: 250px;
+  right: 300px;
+  padding:5px;
+  font-size: bord;
 `
 // javascript 로 로드되어있는 구글 api를 사용하기 위해 타입 정의
 // declare는 컴파일이 되지 않고 타입 정보만 알린다.
@@ -100,16 +102,21 @@ export const AuthController = (_props: any) => {
     });
   }, []);
 
-  // 버튼 클릭 시 사용자를 로그인
+  // 현재 로그인한 사용자의 이름 저장
+  const [loginUserName, setLoginUserName] = useState("");
+
+  // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
     window.localStorage.setItem("user_id", res.googleId);
-    window.localStorage.setItem("user_email", res.Ju.sf);
-    window.localStorage.setItem("user_name", res.Ju.zv);
+    window.localStorage.setItem("user_email", res.Ju.zv);
+    window.localStorage.setItem("user_name", res.Ju.sf);
 
     console.log("login state:", window.localStorage)
     console.log("user name:",res.Ju.sf)
     console.log("user email:",res.Ju.zv)
+
+    setLoginUserName(res.Ju.sf)
   }
 
   // Login Fail
@@ -117,7 +124,7 @@ export const AuthController = (_props: any) => {
     console.error('Login Fail', err);
   }
 
-  // 버튼 클릭 시 사용자를 로그아웃
+  // 버튼 클릭 시 로그인 데이터 삭제
   const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
     window.localStorage.removeItem("user_id");
@@ -127,11 +134,11 @@ export const AuthController = (_props: any) => {
   }
   
 
-  // 로그인 여부 상태값에 따라 Authorize / Sign Out 버튼 렌더링
+  // 로그인 여부 상태값에 따라 Sign In / Sign Out 버튼 렌더링
   return (
     <>
       <LoginUser>
-
+        {loginUserName}님
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>
