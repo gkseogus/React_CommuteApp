@@ -1,26 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchRequest } from '../../store/inventory/action';
-import { Inventory } from '../../store/inventory/types';
 import styled from "styled-components";
+import { GoogleLogin,GoogleLogout } from 'react-google-login';
 
-const SignBtn = styled.button`
+const LoginContain = styled.div`
   position: fixed;
   right: 150px;
-  
 `
-interface PropsFromState {
-  loading: boolean;
-  data: Inventory[];
-  errors?: string;
-}
-
-interface PropsFromDispatch {
-  fetchRequest: (data: Inventory[]) => any;
-}
-
-type AllProps = PropsFromState & PropsFromDispatch;
-
+const LoginUser = styled.div`
+  position: fixed;
+  right: 250px;
+`
 // javascript 로 로드되어있는 구글 api를 사용하기 위해 타입 정의
 // declare는 컴파일이 되지 않고 타입 정보만 알린다.
 declare const window: Window & {
@@ -110,26 +101,55 @@ export const AuthController = (_props: any) => {
   }, []);
 
   // 버튼 클릭 시 사용자를 로그인
-  function handleAuthClick() {
+  const handleAuthClick = (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
+    window.localStorage.setItem("user_id", res.googleId);
+    window.localStorage.setItem("user_email", res.Ju.sf);
+    window.localStorage.setItem("user_name", res.Ju.zv);
+
+    console.log("login state:", window.localStorage)
+    console.log("user name:",res.Ju.sf)
+    console.log("user email:",res.Ju.zv)
+  }
+
+  // Login Fail
+  const responseFail = (err: void) => {
+    console.error('Login Fail', err);
   }
 
   // 버튼 클릭 시 사용자를 로그아웃
-  function handleSignoutClick() {
+  const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
+    window.localStorage.removeItem("user_id");
+    window.localStorage.removeItem("user_email");
+    window.localStorage.removeItem("user_name");
+    console.log("logout state:", window.localStorage)
   }
+  
 
   // 로그인 여부 상태값에 따라 Authorize / Sign Out 버튼 렌더링
   return (
     <>
+      <LoginUser>
+
+      </LoginUser>
       {isSignedIn ? (
-        <SignBtn id="signout_button" onClick={handleSignoutClick}>
-          Sign Out
-        </SignBtn>
+        <LoginContain>
+          <GoogleLogout            
+            clientId={CLIENT_ID}
+            buttonText="Sign Out"
+            onLogoutSuccess={handleSignoutClick}>
+          </GoogleLogout>
+        </LoginContain>
       ) : (
-        <SignBtn id="authorize_button" onClick={handleAuthClick}>
-          Sign in
-        </SignBtn>
+        <LoginContain>
+          <GoogleLogin                     
+            clientId={CLIENT_ID}
+            buttonText="Sign In"
+            onSuccess={handleAuthClick}
+            onFailure={responseFail}>
+          </GoogleLogin>
+       </LoginContain>
       )}
     </>
   );
