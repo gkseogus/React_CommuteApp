@@ -1,8 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { ApplicationState } from '../../store';
+import { useDispatch } from 'react-redux';
 import { fetchRequest } from '../../store/inventory/action';
 import { Inventory } from '../../store/inventory/types';
 import styled from "styled-components";
