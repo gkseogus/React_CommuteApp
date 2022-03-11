@@ -21,7 +21,7 @@ const UserSearch = (_props: any) => {
             <Button 
               style={{
                 top: 14,
-                left: '510px',
+                left: '590px',
                 position: 'fixed',
                 color: 'black',
               }} 
@@ -31,7 +31,7 @@ const UserSearch = (_props: any) => {
           style={{
             width: 200,
             top: 14,
-            left: '300px',
+            left: '380px',
             position: 'fixed'
           }}
         />
