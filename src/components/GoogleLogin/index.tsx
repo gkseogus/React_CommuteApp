@@ -126,7 +126,7 @@ export const AuthController = (_props: any) => {
                   'Content-Type': 'application/json'
               },
               body: JSON.stringify({"data":
-          {"user": res.Ju.sf}
+          {"team": "R&D", "user": res.Ju.sf}
           })
         }
       );
