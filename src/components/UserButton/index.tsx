@@ -18,6 +18,7 @@ const Container2 = styled.div`
 const UserButton = (_props: any) => {
     
     const [disable, setDisable] = useState(false);
+
     const [checkInState, setCheckInState] = useState({
         checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
     })
@@ -32,7 +33,7 @@ const UserButton = (_props: any) => {
         console.log('출근시간',newDate)
         try {
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/MGx78iL3ZrDWTQgw/'
+                'https://api.apispreadsheets.com/data/wpeGmpNSay3cBnH5/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -56,7 +57,7 @@ const UserButton = (_props: any) => {
         console.log('퇴근시간',newDate)
         try {
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/MGx78iL3ZrDWTQgw/'
+                'https://api.apispreadsheets.com/data/wpeGmpNSay3cBnH5/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -75,7 +76,7 @@ const UserButton = (_props: any) => {
     }
 
     return (
-        <div>
+        <div key={"UB"}>
             <Container>
                 <Button type="primary" disabled={disable} onClick={btnDisable}>출근</Button>
             </Container>

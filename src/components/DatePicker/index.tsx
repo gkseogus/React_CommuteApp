@@ -6,7 +6,7 @@ const { RangePicker } = DatePicker;
 
 const HomeDatePicker = (_props: any) => {
   return (
-    <Space direction="vertical" size={12}>
+    <Space key={"DP"} direction="vertical" size={12}>
     <RangePicker
       showTime={{ format: 'HH:mm' }}
       format="YYYY-MM-DD HH:mm"
