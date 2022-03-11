@@ -106,7 +106,7 @@ export const AuthController = (_props: any) => {
   const [loginUserName, setLoginUserName] = useState("");
 
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
-  const handleAuthClick = (res: any) => {
+  const handleAuthClick = async (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
     window.localStorage.setItem("user_id", res.googleId);
     window.localStorage.setItem("user_email", res.Ju.zv);
@@ -117,6 +117,23 @@ export const AuthController = (_props: any) => {
     console.log("user email:",res.Ju.zv)
 
     setLoginUserName(res.Ju.sf)
+    try {
+      const res1 = await fetch(
+          'https://api.apispreadsheets.com/data/wpeGmpNSay3cBnH5/'
+          ,{
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({"data":
+          {"user": res.Ju.sf}
+          })
+        }
+      );
+    await res1.json();
+  } catch(err){
+      console.log('error:', err);
+  }
   }
 
   // Login Fail
@@ -136,7 +153,7 @@ export const AuthController = (_props: any) => {
 
   // 로그인 여부 상태값에 따라 Sign In / Sign Out 버튼 렌더링
   return (
-    <>
+    <div key={"GL"}>
       <LoginUser>
         {loginUserName}님
       </LoginUser>
@@ -158,7 +175,7 @@ export const AuthController = (_props: any) => {
           </GoogleLogin>
        </LoginContain>
       )}
-    </>
+    </div>
   );
 }
 
