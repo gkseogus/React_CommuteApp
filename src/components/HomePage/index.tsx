@@ -47,6 +47,17 @@ const columns: any = [
         text: 'R&D',
         value: 'R&D',
       },
+      {
+        text: 'PUB',
+        value: 'PUB',
+      },
+      {
+        text: 'CM',
+        value: 'CM',
+      },      {
+        text: '경영지원',
+        value: '경영지원',
+      }
     ],
     // specify the condition of filtering result
     // here is that finding the name started with `value`
@@ -96,7 +107,7 @@ const columns: any = [
       record.workState.indexOf(value) === 0,
   },
   {
-    title: '출퇴근 여부',
+    title: '출근 여부',
     dataIndex: 'working',
     filters: [
       {
@@ -108,8 +119,8 @@ const columns: any = [
         value: '퇴근',
       },
     ],
-    onFilter: (value: any, record: { homeWork: string | any[] }) =>
-      record.homeWork.indexOf(value) === 0,
+    onFilter: (value: any, record: { working: string | any[] }) =>
+      record.working.indexOf(value) === 0,
   },
 ];
 
@@ -124,7 +135,7 @@ const HomePage = (_props: any) => {
     try {
       // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
       const res = await fetch(
-        'https://api.apispreadsheets.com/data/U3EG1z3vGIkL3h8Q/'
+        'https://api.apispreadsheets.com/data/MGx78iL3ZrDWTQgw/'
       );
       // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
       const dataData = await res.json();
@@ -155,7 +166,8 @@ const HomePage = (_props: any) => {
       if (!time) {
         return true;
       }
-      /**
+
+      /*
        * moment js 가 한글이 포함될 경우 파싱을 못하기 때문에 한글 제거 [.replace(/[가-핳]/g, '')]
        * 가나다라...처럼 조합된 한글을 찾는 표현식
        * checkIn, checkOut 값을 파싱 후
@@ -169,14 +181,25 @@ const HomePage = (_props: any) => {
         String(i.checkOut).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
       ).startOf('day');
+
+      const workState = (checkIn: any, checkOut: any) => {
+        return ( checkIn - checkOut)
+      }
+
+
+
+
+
       // 선택한 시간 범위에 checkIn 시간이 포함되거나
       // 선택한 시간 범위에 checkOut 시간이 포함되면
       // 해당 항목을 테이블에 보여줌
       return (
         (checkIn.isAfter(time.start) && checkIn.isBefore(time.end)) ||
-        (checkOut.isAfter(time.start) && checkOut.isBefore(time.end))
+        (checkOut.isAfter(time.start) && checkOut.isBefore(time.end)) ||
+        (workState)
       );
-    });
+    });      
+
 
   // 이름, 날짜 필터링 적용을 위해서 UserButton, UserSearch 컴포넌트를 HomePage로 이동
   return (
