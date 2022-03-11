@@ -129,26 +129,6 @@ const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
 };
 
 const HomePage = (_props: any) => {
-  const dispatch = useDispatch();
-
-  const getData = async () => {
-    try {
-      // fetch로 해당 API를 호출하고 응답 데이터를 받아옴(비동기 요청)
-      const res = await fetch(
-        'https://api.apispreadsheets.com/data/MGx78iL3ZrDWTQgw/'
-      );
-      // API를 호출한 후 응답 객체를 받으며 .json() 메서드로 파싱한 json값을 리턴
-      const dataData = await res.json();
-      console.log('API get data', dataData.data);
-      dispatch(fetchRequest(dataData.data));
-    } catch (err) {
-      console.log('error:', err);
-    }
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   const [name, setName] = useState('');
   const [time, setTime] = useState<{ start: Moment; end: Moment }>();
@@ -185,10 +165,6 @@ const HomePage = (_props: any) => {
       const workState = (checkIn: any, checkOut: any) => {
         return ( checkIn - checkOut)
       }
-
-
-
-
 
       // 선택한 시간 범위에 checkIn 시간이 포함되거나
       // 선택한 시간 범위에 checkOut 시간이 포함되면
