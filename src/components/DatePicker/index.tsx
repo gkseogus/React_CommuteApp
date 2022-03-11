@@ -7,7 +7,11 @@ const { RangePicker } = DatePicker;
 const HomeDatePicker = (_props: any) => {
   return (
     <Space direction="vertical" size={12}>
-      <RangePicker onChange={_props.onChange} />
+    <RangePicker
+      showTime={{ format: 'HH:mm' }}
+      format="YYYY-MM-DD HH:mm"
+      onChange={_props.onChange}
+    />
     </Space>
   );
 };
