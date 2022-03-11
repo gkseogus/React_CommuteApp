@@ -2,9 +2,7 @@ import { Reducer } from 'redux';
 import {
   FETCH_ERROR,
   FETCH_SUCCESS,
-  CHECK_IN,
-  CHECK_OUT,
-  InventoryState,
+  InventoryState
 } from './types';
 
 export const initialState: InventoryState = {
@@ -25,14 +23,6 @@ const reducer: Reducer<InventoryState> = (state = initialState, action) => {
     case FETCH_ERROR: {
       console.log('Error')
       return { ...state, loading: false, data: action.payload };
-    }
-    case CHECK_IN: {
-      console.log('checkIn payload', action.payload);
-      return { ...state, loading: false, checkIn: action.payload };
-    }
-    case CHECK_OUT: {
-      console.log('checkOut payload', action.payload);
-      return { ...state, loading: false, checkOut: action.payload };
     }
     default: {
       return state;
