@@ -20,7 +20,8 @@ const UserButton = (_props: any) => {
     const [disable, setDisable] = useState(false);
 
     const [checkInState, setCheckInState] = useState({
-        checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
+        checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss'),
+        checkOut: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
     })
     const [checkOutState, setCheckOutState] = useState({
         checkOut: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
@@ -40,7 +41,7 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkIn": checkInState.checkIn}
+                {"checkIn": checkInState.checkIn, "checkOut": checkInState.checkOut}
                 })
                 }
             );
