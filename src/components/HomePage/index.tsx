@@ -96,16 +96,16 @@ const columns: any = [
       record.workState.indexOf(value) === 0,
   },
   {
-    title: '재택 여부',
-    dataIndex: 'homeWork',
+    title: '출퇴근 여부',
+    dataIndex: 'working',
     filters: [
       {
-        text: '회사',
-        value: '회사',
+        text: '출근',
+        value: '출근',
       },
       {
-        text: '재택',
-        value: '재택',
+        text: '퇴근',
+        value: '퇴근',
       },
     ],
     onFilter: (value: any, record: { homeWork: string | any[] }) =>
