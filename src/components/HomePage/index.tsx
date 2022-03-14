@@ -15,57 +15,46 @@ const columns: any = [
     dataIndex: 'team',
     filters: [
       {
-        key: '1',
         text: 'GL',
         value: 'GL',
       },
       {
-        key: '2',
         text: 'Visual',
         value: 'Visual',
       },
       {
-        key: '3',
         text: 'Interaction',
         value: 'Interaction',
       },
       {
-        key: '4',
         text: 'Motion',
         value: 'Motion',
       },
       {
-        key: '5',
         text: 'I',
         value: 'I',
       },
       {
-        key: '6',
         text: '전략기획',
         value: '전략기획',
       },
       {
-        key: '7',
         text: 'WFE',
         value: 'WFE',
       },
       {
-        key: '8',
         text: 'R&D',
         value: 'R&D',
       },
       {
-        key: '9',
         text: 'PUB',
         value: 'PUB',
       },
       {
-        key: '10',
         text: 'CM',
         value: 'CM',
       },      
       {
-        key: '11',
         text: '경영지원',
         value: '경영지원'
       }
@@ -76,7 +65,6 @@ const columns: any = [
       record.team.indexOf(value) === 0
   },
   {
-    key: '21',
     title: '사용자',
     dataIndex: 'user',
     defaultSortOrder: 'user',
@@ -86,7 +74,6 @@ const columns: any = [
     }
   },
   {
-    key: '31',
     title: '체크인',
     dataIndex: 'checkIn',
     defaultSortOrder: 'checkIn',
@@ -95,7 +82,6 @@ const columns: any = [
     }
   },
   {
-    key: '41',
     title: '체크아웃',
     dataIndex: 'checkOut',
     defaultSortOrder: 'checkOut',
@@ -104,23 +90,19 @@ const columns: any = [
     }
   },
   {
-    key: '51',
     title: '근무시간',
     dataIndex: 'workTime',
     defaultSortOrder: 'workTime',
   },
   {
-    key: '61',
     title: '근무상태',
     dataIndex: 'workState',
     filters: [
       {
-        key: '62',
         text: '근무미달',
         value: '근무미달',
       },
       {
-        key: '63',
         text: '정상',
         value: '정상',
       },
@@ -129,17 +111,14 @@ const columns: any = [
       record.workState.indexOf(value) === 0,
   },
   {
-    key: '71',
     title: '출근 여부',
     dataIndex: 'working',
     filters: [
       {
-        key: '72',
         text: '출근',
         value: '출근',
       },
       {
-        key: '73',
         text: '퇴근',
         value: '퇴근',
       },
