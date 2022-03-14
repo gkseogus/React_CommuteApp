@@ -57,6 +57,7 @@ const UserButton = (_props: any) => {
         
         // 단순 api에 데이터를 보내주기 위한 변수
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss'); 
+        const hoursDate = moment(new Date()).format('HH'); 
         console.log('퇴근시간',newDate);
 
         // (퇴근시간 - 출근시간) 연산을 위한 변수
@@ -73,7 +74,7 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkOut": checkOutState.checkOut, "working": "퇴근"}
+                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": hoursDate}
                 })
                 }
             )]);
