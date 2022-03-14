@@ -21,10 +21,12 @@ const UserButton = (_props: any) => {
 
     const [checkInState, setCheckInState] = useState({
         checkIn: moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss')
-    })
+    });
     const [checkOutState, setCheckOutState] = useState({
         checkOut: moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss')
-    })
+    });
+    
+    const [workState, setWorkState] = useState("");
 
     const btnDisable = async () => {
         setDisable(true)
@@ -46,25 +48,28 @@ const UserButton = (_props: any) => {
                 }
             )]);
             console.log(res);
-            setCheckInState({...checkInState, checkIn:newDate})
+            setCheckInState({...checkInState, checkIn:newDate});
         } catch(err){
             console.log('error:', err);
         }
     }
 
     const reverseDisable = async () => {
-        setDisable(false)
+        setDisable(false);
         
-        // 단순 api에 데이터를 보내주기 위한 변수
         const newDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
-        const hoursDate = moment(new Date()).format('HH'); 
+        const subHours = moment(new Date()).subtract(9, 'h').format('YYYY MM월 DD일,HH:mm:ss');
         console.log('퇴근시간',newDate);
-
-        // (퇴근시간 - 출근시간) 연산을 위한 변수
-        const wenDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss');
-        // console.log('wEN',wenDate)
-        // console.log('rere',checkInState.checkIn)
-        // // console.log('test', moment.duration(wenDate.diff(checkInState.checkIn)).asHours())
+        // subHours의 시간은 현재시간에서 9시간 뺀 값
+        // 즉 정상 근무를 하였으면 퇴근시간 - 9시간 = 출근시간 
+        // 만약 출근시간이랑 동일하지 않으면 그것은 근무미달
+        if(subHours !== checkInState.checkIn){
+            setWorkState("근무미달");
+        }
+        else {
+            setWorkState("정상");  
+        }
+        // console.log('test', moment.duration(subHours.diff(checkInState.checkIn)).asHours())
         try {
             const res = await Promise.allSettled([fetch(
                 'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
@@ -74,15 +79,15 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": hoursDate}
+                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": subHours, "workState": workState}
                 })
                 }
             )]);
             console.log(res);
-            setCheckOutState({...checkOutState, checkOut:newDate})
+            setCheckOutState({...checkOutState, checkOut:newDate});
         } catch(err){
             console.log('error:', err);
-        }
+        }   
     }
 
     return (
