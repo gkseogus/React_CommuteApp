@@ -115,11 +115,11 @@ export const AuthController = (_props: any) => {
     window.localStorage.setItem('user_email', res.Ju.zv);
     window.localStorage.setItem('user_name', res.Ju.sf);
 
-    console.log('login state:', window.localStorage)
-    console.log('user name:',res.Ju.sf)
-    console.log('user email:',res.Ju.zv)
+    console.log('login state:', window.localStorage);
+    console.log('user name:',res.Ju.sf);
+    console.log('user email:',res.Ju.zv);
 
-    setLoginUserName(res.Ju.sf)
+    setLoginUserName(res.Ju.sf);
     try {
       const res2 = await Promise.allSettled([fetch(
           'https://api.apispreadsheets.com/data/6N3SdZx9voMzw0Bc/'
@@ -150,7 +150,7 @@ export const AuthController = (_props: any) => {
     window.localStorage.removeItem('user_id');
     window.localStorage.removeItem('user_email');
     window.localStorage.removeItem('user_name');
-    console.log('logout state:', window.localStorage)
+    console.log('logout state:', window.localStorage);
   }
   
 

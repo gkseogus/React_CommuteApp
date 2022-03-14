@@ -13,7 +13,7 @@ export interface ApplicationState {
   // 리듀서의 inventory 상태가 여기에 저장 -> app 보면  store에 사용하고있음
   inventory: InventoryState;
   router: RouterState;
-}
+};
 
 export const createRootReducer = (history: History) =>
   // combineReducers : 각각의 리듀서를 하나로 합쳐 하나의 리듀서로 관리 

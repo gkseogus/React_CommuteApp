@@ -7,7 +7,7 @@ export interface Inventory {
   workState: string;
   working: string;
   key: number;
-}
+};
 
 // 전송 가능한 액션 유형 (type은 const로 하는게 좋다)
 export const FETCH_SUCCESS = '@@inventory/FETCH_SUCCESS'; // 성공적인 응답
@@ -17,4 +17,4 @@ export interface InventoryState {
   readonly loading: boolean;
   readonly data: Inventory[];
   readonly errors?: string;
-}
+};

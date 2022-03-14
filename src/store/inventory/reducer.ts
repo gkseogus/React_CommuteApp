@@ -21,7 +21,7 @@ const reducer: Reducer<InventoryState> = (state = initialState, action) => {
       return { ...state, loading: false, data: action.payload };
     }
     case FETCH_ERROR: {
-      console.log('Error')
+      console.log('Error');
       return { ...state, loading: false, data: action.payload };
     }
     default: {
