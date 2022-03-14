@@ -105,7 +105,9 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": subtract, "workState": workState}
+                    {
+                        "checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": subtract, "workState": workState
+                    }
                 })
                 }
             )]);
