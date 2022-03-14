@@ -178,6 +178,7 @@ const HomePage = (_props: any) => {
         String(i.checkIn).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
       ).startOf('second');
+
       const checkOut = moment(
         String(i.checkOut).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'

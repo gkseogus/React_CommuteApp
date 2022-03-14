@@ -20,8 +20,7 @@ const UserButton = (_props: any) => {
     const [disable, setDisable] = useState(false);
 
     const [checkInState, setCheckInState] = useState({
-        checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss'),
-        checkOut: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
+        checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
     })
     const [checkOutState, setCheckOutState] = useState({
         checkOut: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
@@ -31,7 +30,7 @@ const UserButton = (_props: any) => {
         setDisable(true)
         // 데이터 삽입을 위한 format 
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');  
-        console.log('출근시간',newDate)
+        console.log('출근시간',newDate);
         try {
             const res = await fetch(
                 'https://api.apispreadsheets.com/data/wpeGmpNSay3cBnH5/'
@@ -41,7 +40,7 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkIn": checkInState.checkIn, "checkOut": checkInState.checkOut}
+                {"checkIn": checkInState.checkIn}
                 })
                 }
             );
@@ -55,10 +54,11 @@ const UserButton = (_props: any) => {
     const reverseDisable = async () => {
         setDisable(false)
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');
-        console.log('퇴근시간',newDate)
+        console.log('퇴근시간',newDate);
+        // console.log('test', moment.duration(checkInState.diff(checkInState)).asHours())
         try {
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/wpeGmpNSay3cBnH5/'
+                'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
                 ,{
                     method: 'POST',
                     headers: {
