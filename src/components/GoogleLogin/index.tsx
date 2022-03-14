@@ -55,10 +55,12 @@ export const AuthController = (_props: any) => {
           range: 'A2:G16',
         })
         .then((response: any) => {
+          // uuid 로 특정 key 값 설정
+          const { v4: uuidv4 } = require('uuid');
           // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
           dispatch(fetchRequest(
             response.result.values.map((row: string[]) => ({
-              key: Math.random().toString(),
+              key: uuidv4(),
               team: row[0],
               user: row[1],
               checkIn: row[2],
