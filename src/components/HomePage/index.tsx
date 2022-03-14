@@ -177,23 +177,18 @@ const HomePage = (_props: any) => {
       const checkIn = moment(
         String(i.checkIn).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
-      ).startOf('day');
+      ).startOf('second');
       const checkOut = moment(
         String(i.checkOut).replace(/[가-핳]/g, ''),
         'YYYY M DD, hh:mm:ss'
-      ).startOf('day');
-
-      const workState = (checkIn: any, checkOut: any) => {
-        return ( checkIn - checkOut)
-      }
+      ).startOf('second');
 
       // 선택한 시간 범위에 checkIn 시간이 포함되거나
       // 선택한 시간 범위에 checkOut 시간이 포함되면
       // 해당 항목을 테이블에 보여줌
       return (
         (checkIn.isAfter(time.start) && checkIn.isBefore(time.end)) ||
-        (checkOut.isAfter(time.start) && checkOut.isBefore(time.end)) ||
-        (workState)
+        (checkOut.isAfter(time.start) && checkOut.isBefore(time.end))
       );
     });      
 
