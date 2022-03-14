@@ -32,8 +32,8 @@ const UserButton = (_props: any) => {
         setDisable(true)
 
         // 데이터 삽입을 위한 format 
-        const newDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
-        console.log('출근시간',newDate);
+        const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
+        console.log('출근시간',attendanceDate);
         try {
             const res = await Promise.allSettled([fetch(
                 'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
@@ -48,7 +48,7 @@ const UserButton = (_props: any) => {
                 }
             )]);
             console.log(res);
-            setCheckInState({...checkInState, checkIn:newDate});
+            setCheckInState({...checkInState, checkIn:attendanceDate});
         } catch(err){
             console.log('error:', err);
         }
@@ -57,16 +57,18 @@ const UserButton = (_props: any) => {
     const reverseDisable = async () => {
         setDisable(false);
         
-        const newDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
+        const leaveDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         const subHours = moment(new Date()).subtract(9, 'h').format('YYYY MM월 DD일,HH:mm:ss');
-        console.log('퇴근시간',newDate);
+        console.log('퇴근시간',leaveDate);
         // subHours의 시간은 현재시간에서 9시간 뺀 값
         // 즉 정상 근무를 하였으면 퇴근시간 - 9시간 = 출근시간 
         // 만약 출근시간이랑 동일하지 않으면 그것은 근무미달
         if(subHours !== checkInState.checkIn){
+            console.log("근무미달");
             setWorkState("근무미달");
         }
         else {
+            console.log("정상");
             setWorkState("정상");  
         }
         // console.log('test', moment.duration(subHours.diff(checkInState.checkIn)).asHours())
@@ -84,7 +86,7 @@ const UserButton = (_props: any) => {
                 }
             )]);
             console.log(res);
-            setCheckOutState({...checkOutState, checkOut:newDate});
+            setCheckOutState({...checkOutState, checkOut:leaveDate});
         } catch(err){
             console.log('error:', err);
         }   
