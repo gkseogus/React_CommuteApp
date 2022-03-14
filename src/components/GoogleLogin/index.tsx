@@ -72,7 +72,7 @@ export const AuthController = (_props: any) => {
       // 로그아웃시 redux store에서 값 clear
       fetchRequest([]);
     }
-  }, []);
+  }, [dispatch]);
 
   // AuthController 컴포넌트가 처음 렌더링 될 때 (마운트 될 때) 호출됨.
   useEffect(() => {
@@ -100,7 +100,7 @@ export const AuthController = (_props: any) => {
         alert(error);
       }
     });
-  }, []);
+  }, [updateSigninStatus]);
 
   // 현재 로그인한 사용자의 이름 저장
   const [loginUserName, setLoginUserName] = useState("");
