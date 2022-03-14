@@ -33,7 +33,7 @@ const UserButton = (_props: any) => {
         const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');  
         console.log('출근시간',newDate);
         try {
-            const res = await fetch(
+            const res = await Promise.allSettled([fetch(
                 'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
                 ,{
                     method: 'POST',
@@ -44,7 +44,7 @@ const UserButton = (_props: any) => {
                 {"checkIn": checkInState.checkIn, "working": "출근"}
                 })
                 }
-            );
+            )]);
             console.log(res);
             setCheckInState({...checkInState, checkIn:newDate})
         } catch(err){
@@ -65,7 +65,7 @@ const UserButton = (_props: any) => {
         console.log('rere',checkInState.checkIn)
         console.log('test', moment.duration(wenDate.diff(checkInState.checkIn)).asHours())
         try {
-            const res = await fetch(
+            const res = await Promise.allSettled([fetch(
                 'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
                 ,{
                     method: 'POST',
@@ -76,7 +76,7 @@ const UserButton = (_props: any) => {
                 {"checkOut": checkOutState.checkOut, "working": "퇴근"}
                 })
                 }
-            );
+            )]);
             console.log(res);
             setCheckOutState({...checkOutState, checkOut:newDate})
         } catch(err){

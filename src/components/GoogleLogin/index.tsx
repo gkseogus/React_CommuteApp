@@ -118,7 +118,7 @@ export const AuthController = (_props: any) => {
 
     setLoginUserName(res.Ju.sf)
     try {
-      const res2 = await fetch(
+      const res2 = await Promise.allSettled([fetch(
           'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
           ,{
               method: 'POST',
@@ -129,7 +129,7 @@ export const AuthController = (_props: any) => {
           {"team": "R&D", "user": res.Ju.sf}
           })
         }
-      );
+      )]);
       console.log(res2);
   } catch(err){
       console.log('error:', err);
