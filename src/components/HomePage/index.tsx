@@ -81,7 +81,7 @@ const columns: any = [
     dataIndex: 'user',
     defaultSortOrder: 'user',
     sorter: (a: { user: string }, b: { user: string }) => {
-      // a<b이면 1, elseIf(a===b)이면 0, else이면 -1
+      // 삼항연산자, a<b이면 1, elseIf(a===b)이면 0, else이면 -1
       return (a<b)?1 : (a===b)?0:-1;
     }
   },
@@ -90,16 +90,18 @@ const columns: any = [
     title: '체크인',
     dataIndex: 'checkIn',
     defaultSortOrder: 'checkIn',
-    sorter: (a: { checkIn: number }, b: { checkIn: number }): number =>
-      a.checkIn - b.checkIn,
+    sorter: (a: { checkIn: string }, b: { checkIn: string }) => {
+      return (a<b)?1 : (a===b)?0:-1;
+    }
   },
   {
     key: '41',
     title: '체크아웃',
     dataIndex: 'checkOut',
     defaultSortOrder: 'checkOut',
-    sorter: (a: { checkOut: number }, b: { checkOut: number }): number =>
-      a.checkOut - b.checkOut,
+    sorter: (a: { checkOut: string }, b: { checkOut: string }) => {
+      return (a<b)?1 : (a===b)?0:-1;
+    }
   },
   {
     key: '51',
@@ -159,7 +161,6 @@ const HomePage = (_props: any) => {
   const newData = useSelector(
     (state: ApplicationState) => state.inventory.data
   );
-
   // 이름, 날짜로 필터링하는 로직 시작
   const data = (newData ?? [])
     // 이름이 입력됐을 경우 이름과 매칭하는 유저만 필터링 -> i = newData
