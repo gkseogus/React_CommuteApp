@@ -78,7 +78,7 @@ const columns: any = [
     dataIndex: 'checkIn',
     defaultSortOrder: 'checkIn',
     sorter: (a: { checkIn: string }, b: { checkIn: string }) => {
-      return (a<b)?1 : (a===b)?0:-1;
+      return (a.checkIn<b.checkIn)?1 : (a.checkIn===b.checkIn)?0:-1;
     }
   },
   {
@@ -86,7 +86,8 @@ const columns: any = [
     dataIndex: 'checkOut',
     defaultSortOrder: 'checkOut',
     sorter: (a: { checkOut: string }, b: { checkOut: string }) => {
-      return (a<b)?1 : (a===b)?0:-1;
+      console.log('a',a.checkOut, 'b',b.checkOut)
+      return (a.checkOut<b.checkOut)?1 : (a.checkOut===b.checkOut)?0:-1;
     }
   },
   {
