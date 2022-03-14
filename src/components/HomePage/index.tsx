@@ -73,15 +73,17 @@ const columns: any = [
     // specify the condition of filtering result
     // here is that finding the name started with `value`
     onFilter: (value: any, record: { team: string | any[] }) =>
-      record.team.indexOf(value) === 0,
+      record.team.indexOf(value) === 0
   },
   {
     key: '21',
     title: '사용자',
     dataIndex: 'user',
     defaultSortOrder: 'user',
-    sorter: (a: { user: number }, b: { user: number }): number =>
-      a.user - b.user,
+    sorter: (a: { user: string }, b: { user: string }) => {
+      // a<b이면 1, elseIf(a===b)이면 0, else이면 -1
+      return (a<b)?1 : (a===b)?0:-1;
+    }
   },
   {
     key: '31',
