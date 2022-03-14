@@ -86,7 +86,7 @@ const UserButton = (_props: any) => {
         // }
 
         // subtract에는 퇴근시간 - 출근시간 의 값이 들어있다.
-        // 이 값이 3.24e+7(9시간을 ms로 환산한 값)보다 작으면 근무미달
+        // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
         // 그 외의 나머지 조건은 모두 정상
         if (subtract < 3.24e+7) {
             console.log("근무시간:",subtract,'    ',"근무미달");
@@ -105,7 +105,7 @@ const UserButton = (_props: any) => {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({"data":
-                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": subHours, "workState": workState}
+                {"checkOut": checkOutState.checkOut, "working": "퇴근", "workTime": subtract, "workState": workState}
                 })
                 }
             )]);
