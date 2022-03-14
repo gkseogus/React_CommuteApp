@@ -178,7 +178,7 @@ const HomePage = (_props: any) => {
 
   // 이름, 날짜 필터링 적용을 위해서 UserButton, UserSearch 컴포넌트를 HomePage로 이동
   return (
-    <div key={"HP"}>
+    <div key={'HP'}>
       <UserButton />
       <HomeDatePicker
         onChange={(moment: Moment[]) =>

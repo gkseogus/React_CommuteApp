@@ -1,9 +1,9 @@
-import { FETCH_ERROR,FETCH_SUCCESS } from "./types";
+import { FETCH_ERROR,FETCH_SUCCESS } from './types';
 
-import { ActionCreator, Action, Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { ActionCreator, Action, Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 
-import { ApplicationState } from "../index";
+import { ApplicationState } from '../index';
 
 export type AppThunk = ActionCreator<
   ThunkAction<

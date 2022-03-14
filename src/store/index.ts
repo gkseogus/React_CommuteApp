@@ -1,12 +1,12 @@
-import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
+import { combineReducers } from 'redux';
+import { connectRouter } from 'connected-react-router';
 
-import { History } from "history";
+import { History } from 'history';
 
-import { InventoryReducer } from "./inventory/reducer";
-import { InventoryState } from "./inventory/types";
+import { InventoryReducer } from './inventory/reducer';
+import { InventoryState } from './inventory/types';
 
-import { RouterState } from "connected-react-router";
+import { RouterState } from 'connected-react-router';
 
 // ApplicationState: store의 상태
 export interface ApplicationState {

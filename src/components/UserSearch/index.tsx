@@ -12,10 +12,10 @@ const UserSearch = (_props: any) => {
   const [size] = useState(8);
 
   return (
-    <ButtonContainer key={"US"}>
+    <ButtonContainer key={'US'}>
       <Space size={size}>
         <Search
-          placeholder="이름"
+          placeholder='이름'
           onSearch={_props.onSearch}
           enterButton={
             <Button 

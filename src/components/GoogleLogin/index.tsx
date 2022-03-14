@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchRequest } from '../../store/inventory/action';
-import styled from "styled-components";
+import styled from 'styled-components';
 import { GoogleLogin,GoogleLogout } from 'react-google-login';
 
 const LoginContain = styled.div`
@@ -106,18 +106,18 @@ export const AuthController = (_props: any) => {
   }, [updateSigninStatus]);
 
   // 현재 로그인한 사용자의 이름 저장
-  const [loginUserName, setLoginUserName] = useState("");
+  const [loginUserName, setLoginUserName] = useState('');
 
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = async (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
-    window.localStorage.setItem("user_id", res.googleId);
-    window.localStorage.setItem("user_email", res.Ju.zv);
-    window.localStorage.setItem("user_name", res.Ju.sf);
+    window.localStorage.setItem('user_id', res.googleId);
+    window.localStorage.setItem('user_email', res.Ju.zv);
+    window.localStorage.setItem('user_name', res.Ju.sf);
 
-    console.log("login state:", window.localStorage)
-    console.log("user name:",res.Ju.sf)
-    console.log("user email:",res.Ju.zv)
+    console.log('login state:', window.localStorage)
+    console.log('user name:',res.Ju.sf)
+    console.log('user email:',res.Ju.zv)
 
     setLoginUserName(res.Ju.sf)
     try {
@@ -128,8 +128,8 @@ export const AuthController = (_props: any) => {
               headers: {
                   'Content-Type': 'application/json'
               },
-              body: JSON.stringify({"data":
-          {"team": "R&D", "user": res.Ju.sf}
+              body: JSON.stringify({'data':
+          {'team': 'R&D', 'user': res.Ju.sf}
           })
         }
       )]);
@@ -147,16 +147,16 @@ export const AuthController = (_props: any) => {
   // 버튼 클릭 시 로그인 데이터 삭제
   const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
-    window.localStorage.removeItem("user_id");
-    window.localStorage.removeItem("user_email");
-    window.localStorage.removeItem("user_name");
-    console.log("logout state:", window.localStorage)
+    window.localStorage.removeItem('user_id');
+    window.localStorage.removeItem('user_email');
+    window.localStorage.removeItem('user_name');
+    console.log('logout state:', window.localStorage)
   }
   
 
   // 로그인 여부 상태값에 따라 Sign In / Sign Out 버튼 렌더링
   return (
-    <div key={"GL"}>
+    <div key={'GL'}>
       <LoginUser>
         {loginUserName}님
       </LoginUser>
@@ -164,7 +164,7 @@ export const AuthController = (_props: any) => {
         <LoginContain>
           <GoogleLogout            
             clientId={CLIENT_ID}
-            buttonText="Sign Out"
+            buttonText='Sign Out'
             onLogoutSuccess={handleSignoutClick}>
           </GoogleLogout>
         </LoginContain>
@@ -172,7 +172,7 @@ export const AuthController = (_props: any) => {
         <LoginContain>
           <GoogleLogin                     
             clientId={CLIENT_ID}
-            buttonText="Sign In"
+            buttonText='Sign In'
             onSuccess={handleAuthClick}
             onFailure={responseFail}>
           </GoogleLogin>

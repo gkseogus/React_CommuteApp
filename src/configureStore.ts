@@ -1,8 +1,8 @@
-import { Store, createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk"; 
-import { routerMiddleware } from "connected-react-router";
-import { History } from "history";
-import { ApplicationState, createRootReducer } from "./store";
+import { Store, createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk'; 
+import { routerMiddleware } from 'connected-react-router';
+import { History } from 'history';
+import { ApplicationState, createRootReducer } from './store';
 import { composeWithDevTools } from 'redux-devtools-extension'; // 리덕스 개발자 도구
 
 // 여기서 configureStore는 단지 함수명이다. (모듈로 불러오지 않음)
