@@ -28,15 +28,20 @@ const UserButton = (_props: any) => {
     
     const [workState, setWorkState] = useState("");
 
+    // 단순 연산을 위한 상태값(format x)
+    const [workTime, setWorkTime] = useState({});
+
     const btnDisable = async () => {
         setDisable(true)
+        // 출근버튼 클릭 시 workTime에 출근시간 값 저장
+        setWorkTime(moment((new Date())));
 
         // 데이터 삽입을 위한 format 
         const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('출근시간',attendanceDate);
         try {
             const res = await Promise.allSettled([fetch(
-                'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
+                'https://api.apispreadsheets.com/data/6N3SdZx9voMzw0Bc/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -58,23 +63,42 @@ const UserButton = (_props: any) => {
         setDisable(false);
         
         const leaveDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
-        const subHours = moment(new Date()).subtract(9, 'h').format('YYYY MM월 DD일,HH:mm:ss');
         console.log('퇴근시간',leaveDate);
+
+        // 현재시간에서 9시간 뺀 값
+        const subHours = moment(new Date()).subtract(9, 'h').format('YYYY MM월 DD일,HH:mm:ss');
+        
+        // 단순 연산을 위한 변수(format x)
+        const leaveDate2 = Number(moment(new Date()));
+        // 퇴근시간 - 출근시간 
+        const subtract = leaveDate2-Number(workTime);
+
         // subHours의 시간은 현재시간에서 9시간 뺀 값
         // 즉 정상 근무를 하였으면 퇴근시간 - 9시간 = 출근시간 
         // 만약 출근시간이랑 동일하지 않으면 그것은 근무미달
-        if(subHours !== checkInState.checkIn){
-            console.log("근무미달");
+        // if(subHours !== checkInState.checkIn){
+        //     console.log("근무미달");
+        //     setWorkState("근무미달");
+        // }
+        // else {
+        //     console.log("정상");
+        //     setWorkState("정상");  
+        // }
+
+        // subtract에는 퇴근시간 - 출근시간 의 값이 들어있다.
+        // 이 값이 3.24e+7(9시간을 ms로 환산한 값)보다 작으면 근무미달
+        // 그 외의 나머지 조건은 모두 정상
+        if (subtract < 3.24e+7) {
+            console.log("근무시간:",subtract,'    ',"근무미달");
             setWorkState("근무미달");
         }
         else {
             console.log("정상");
-            setWorkState("정상");  
+            setWorkState("정상");
         }
-        // console.log('test', moment.duration(subHours.diff(checkInState.checkIn)).asHours())
         try {
             const res = await Promise.allSettled([fetch(
-                'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
+                'https://api.apispreadsheets.com/data/6N3SdZx9voMzw0Bc/'
                 ,{
                     method: 'POST',
                     headers: {
