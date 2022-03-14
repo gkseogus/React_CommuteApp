@@ -20,21 +20,21 @@ const UserButton = (_props: any) => {
     const [disable, setDisable] = useState(false);
 
     const [checkInState, setCheckInState] = useState({
-        checkIn: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
+        checkIn: moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss')
     })
     const [checkOutState, setCheckOutState] = useState({
-        checkOut: moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss')
+        checkOut: moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss')
     })
 
     const btnDisable = async () => {
         setDisable(true)
 
         // 데이터 삽입을 위한 format 
-        const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss');  
+        const newDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('출근시간',newDate);
         try {
             const res = await Promise.allSettled([fetch(
-                'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
+                'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -56,18 +56,18 @@ const UserButton = (_props: any) => {
         setDisable(false)
         
         // 단순 api에 데이터를 보내주기 위한 변수
-        const newDate = moment(new Date()).format('YYYY DD월 MM일,HH:mm:ss'); 
+        const newDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         const hoursDate = moment(new Date()).format('HH'); 
         console.log('퇴근시간',newDate);
 
         // (퇴근시간 - 출근시간) 연산을 위한 변수
-        const wenDate = moment();
-        console.log('wEN',wenDate)
-        console.log('rere',checkInState.checkIn)
-        console.log('test', moment.duration(wenDate.diff(checkInState.checkIn)).asHours())
+        const wenDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss');
+        // console.log('wEN',wenDate)
+        // console.log('rere',checkInState.checkIn)
+        // // console.log('test', moment.duration(wenDate.diff(checkInState.checkIn)).asHours())
         try {
             const res = await Promise.allSettled([fetch(
-                'https://api.apispreadsheets.com/data/1Hu1GF1mNrXIVgOt/'
+                'https://api.apispreadsheets.com/data/YN1QAPcdoAu294nX/'
                 ,{
                     method: 'POST',
                     headers: {
