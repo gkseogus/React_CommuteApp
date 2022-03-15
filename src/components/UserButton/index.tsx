@@ -49,7 +49,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/ghkpB5QlIc0tKUFJ/'
+                'https://api.apispreadsheets.com/data/TUQgtSPZy4hYo8W1/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -88,7 +88,7 @@ const UserButton = (_props: any) => {
         // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
         // 그 외의 나머지 조건은 모두 정상
         if (subtractHour < 3.24e+7) {
-            console.log('근무시간:',subtractHour,'시간',' 근무미달');
+            console.log('근무시간:',subtractHour,'시간',subtractMinute,'분',subtractSecond,'초',' 근무미달');
             setWorkState('근무미달');
         }
         else if (subtractHour >= 3.24e+7) {
@@ -102,7 +102,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/ghkpB5QlIc0tKUFJ/'
+                'https://api.apispreadsheets.com/data/TUQgtSPZy4hYo8W1/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -117,7 +117,7 @@ const UserButton = (_props: any) => {
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23774wherecheckIn='${checkInState.checkIn}'`
+                    "query": `select*from23775wherecheckIn='${checkInState.checkIn}'`
                 })
                 }
             );
