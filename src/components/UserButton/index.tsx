@@ -33,7 +33,7 @@ const UserButton = (_props: any) => {
     // 출퇴근 상태 값
     const [working, setWorking] = useState('');
 
-    const btnDisable = () => {
+    const btnDisable =  () => {
         const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('출근시간',attendanceDate);
 
@@ -51,8 +51,7 @@ const UserButton = (_props: any) => {
         // 단순 연산을 위한 변수(format x)
         const leaveDate2 = Number(moment(new Date()));
         // 퇴근시간 - 출근시간 
-        const subtract = leaveDate2 - Number(workTime);
-        
+        const subtract = Math.floor(((leaveDate2 - Number(workTime))/1000)/60/60);
         setDisable(false);
         setWorking('퇴근');
 
@@ -60,7 +59,7 @@ const UserButton = (_props: any) => {
         // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
         // 그 외의 나머지 조건은 모두 정상
         if (subtract < 3.24e+7) {
-            console.log('근무시간:',subtract,'    ','근무미달');
+            console.log('근무시간:',subtract,'시간',' 근무미달');
             setWorkState('근무미달');
         }
         else {
@@ -80,7 +79,7 @@ const UserButton = (_props: any) => {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
                         'team': 'R&D', 'user': window.localStorage.user_name,
                         'checkIn': checkInState.checkIn, 'checkOut': leaveDate, 
-                        'workTime': subtract, 'workState': workState, 'working': working
+                        'workTime': subtract + " 시간", 'workState': workState, 'working': working
                     }
                 })
                 }
