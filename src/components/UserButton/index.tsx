@@ -72,6 +72,8 @@ const UserButton = (_props: any) => {
                     },
                     body: JSON.stringify({'data':
                     {
+                        // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
+                        'team': 'R&D', 'user': window.localStorage.user_name,
                         'checkIn': checkInState.checkIn, 'checkOut': leaveDate, 'working': '퇴근', 
                         'workTime': subtract, 'workState': workState
                     }

@@ -120,23 +120,6 @@ export const AuthController = (_props: any) => {
     console.log('user email:',res.Ju.zv);
 
     setLoginUserName(res.Ju.sf);
-    try {
-      const res2 = await Promise.allSettled([fetch(
-          'https://api.apispreadsheets.com/data/6N3SdZx9voMzw0Bc/'
-          ,{
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({'data':
-          {'team': 'R&D', 'user': res.Ju.sf}
-          })
-        }
-      )]);
-      console.log(res2);
-  } catch(err){
-      console.log('error:', err);
-  }
   }
 
   // Login Fail
