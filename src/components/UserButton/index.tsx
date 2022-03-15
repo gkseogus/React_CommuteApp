@@ -36,9 +36,8 @@ const UserButton = (_props: any) => {
     
 
     const btnDisable =  async () => {
-        const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
+        const attendanceDate = moment().format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('출근시간',attendanceDate);
-
         setDisable(true);
 
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
@@ -48,8 +47,9 @@ const UserButton = (_props: any) => {
         // window.localStorage.setItem('workTime', String(workTime));
         console.log(window.localStorage)
         try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/pCQActHy3rbBrnDw/'
+                'https://api.apispreadsheets.com/data/ghkpB5QlIc0tKUFJ/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -64,7 +64,6 @@ const UserButton = (_props: any) => {
                 })
                 }
             );
-            console.log(res);
         } catch(err){
             console.log('error:', err);
         }   
@@ -96,8 +95,9 @@ const UserButton = (_props: any) => {
             setWorkState('undefined');
         }
         try {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/pCQActHy3rbBrnDw/'
+                'https://api.apispreadsheets.com/data/ghkpB5QlIc0tKUFJ/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -110,11 +110,10 @@ const UserButton = (_props: any) => {
                         'workTime': subtract + " 시간", 'workState': workState, 'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23770whereteam='R&D'`
+                    "query": `select*from23774wherecheckIn='${checkInState.checkIn}'`
                 })
                 }
             );
-            console.log(res);
             // window.location.reload();
         } catch(err){
             console.log('error:', err);
