@@ -25,14 +25,14 @@ const UserButton = (_props: any) => {
 
     // 출근 상태 값 (reverseDisable에 넣어주기 위함)
     const [checkInState, setCheckInState] = useState({
-        checkIn: moment().format('YYYY MM월 DD일,HH:mm:ss')
+        checkIn: ''
     });
     
     // 단순 연산을 위한 상태값(format x)
     const [workTime, setWorkTime] = useState({});
 
     // 근무 상태 값
-    const [workState, setWorkState] = useState('');
+    const [workState, setWorkState] = useState('근무미달');
     
 
     const btnDisable =  async () => {
@@ -59,7 +59,7 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
                         'team': 'R&D', 'user': window.localStorage.user_name,
-                        'checkIn': checkInState.checkIn, 'workState': '근무미달', 'working': '출근'
+                        'checkIn': attendanceDate, 'workState': '근무미달', 'working': '출근'
                     }
                 })
                 }
