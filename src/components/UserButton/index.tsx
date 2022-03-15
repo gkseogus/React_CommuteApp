@@ -58,8 +58,11 @@ const UserButton = (_props: any) => {
                     body: JSON.stringify({'data':
                     {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
-                        'team': 'R&D', 'user': window.localStorage.user_name,
-                        'checkIn': attendanceDate, 'workState': '근무미달', 'working': '출근'
+                        'team': 'R&D', 
+                        'user': window.localStorage.user_name,
+                        'checkIn': attendanceDate, 
+                        'workState': '근무미달', 
+                        'working': '출근'
                     }
                 })
                 }
@@ -76,17 +79,19 @@ const UserButton = (_props: any) => {
         // 단순 연산을 위한 변수(format x)
         const leaveDate2 = Number(moment(new Date()));
         // 퇴근시간 - 출근시간 
-        const subtract = Math.floor(((leaveDate2 - Number(workTime))/1000)/60/60);
+        const subtractHour = Math.floor(((leaveDate2 - Number(workTime))/1000)/60/60);
+        const subtractMinute = Math.floor(((leaveDate2 - Number(workTime))/1000)/60);
+        const subtractSecond = Math.floor(((leaveDate2 - Number(workTime))/1000));
         setDisable(false);
 
-        // subtract에는 퇴근시간 - 출근시간 의 값이 들어있다.
+        // subtractHour에는 퇴근시간 - 출근시간 의 시 값이 들어있다.
         // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
         // 그 외의 나머지 조건은 모두 정상
-        if (subtract < 3.24e+7) {
-            console.log('근무시간:',subtract,'시간',' 근무미달');
+        if (subtractHour < 3.24e+7) {
+            console.log('근무시간:',subtractHour,'시간',' 근무미달');
             setWorkState('근무미달');
         }
-        else if (subtract >= 3.24e+7) {
+        else if (subtractHour >= 3.24e+7) {
             console.log('정상');
             setWorkState('정상');
         }
@@ -107,7 +112,9 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
                         'checkOut': leaveDate, 
-                        'workTime': subtract + " 시간", 'workState': workState, 'working': '퇴근'
+                        'workTime': subtractHour + " 시간 " + subtractMinute + " 분 " + subtractSecond + " 초", 
+                        'workState': workState, 
+                        'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
                     "query": `select*from23774wherecheckIn='${checkInState.checkIn}'`
