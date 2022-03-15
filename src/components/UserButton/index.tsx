@@ -15,6 +15,10 @@ const Container2 = styled.div`
     right: 10px;
 `;
 
+declare const window: Window & {
+    gapi: any;
+};
+
 const UserButton = (_props: any) => {
     // 버튼 활성화 상태 값
     const [disable, setDisable] = useState(false);
@@ -30,18 +34,40 @@ const UserButton = (_props: any) => {
     // 근무 상태 값
     const [workState, setWorkState] = useState('');
     
-    // 출퇴근 상태 값
-    const [working, setWorking] = useState('');
 
-    const btnDisable =  () => {
+    const btnDisable =  async () => {
         const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('출근시간',attendanceDate);
 
         setDisable(true);
+
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
         setWorkTime(moment((new Date())));
         setCheckInState({...checkInState, checkIn:attendanceDate});
-        setWorking('출근');
+        // 데이터저장
+        // window.localStorage.setItem('workTime', String(workTime));
+        console.log(window.localStorage)
+        try {
+            const res = await fetch(
+                'https://api.apispreadsheets.com/data/pCQActHy3rbBrnDw/'
+                ,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({'data':
+                    {
+                        // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
+                        'team': 'R&D', 'user': window.localStorage.user_name,
+                        'checkIn': checkInState.checkIn, 'workState': '근무미달', 'working': '출근'
+                    }
+                })
+                }
+            );
+            console.log(res);
+        } catch(err){
+            console.log('error:', err);
+        }   
     }
 
     const reverseDisable = async () => {
@@ -53,7 +79,6 @@ const UserButton = (_props: any) => {
         // 퇴근시간 - 출근시간 
         const subtract = Math.floor(((leaveDate2 - Number(workTime))/1000)/60/60);
         setDisable(false);
-        setWorking('퇴근');
 
         // subtract에는 퇴근시간 - 출근시간 의 값이 들어있다.
         // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
@@ -62,13 +87,17 @@ const UserButton = (_props: any) => {
             console.log('근무시간:',subtract,'시간',' 근무미달');
             setWorkState('근무미달');
         }
-        else {
+        else if (subtract >= 3.24e+7) {
             console.log('정상');
             setWorkState('정상');
         }
+        else {
+            console.log('undefined');
+            setWorkState('undefined');
+        }
         try {
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/BtM8X6uIcctpljxg/'
+                'https://api.apispreadsheets.com/data/pCQActHy3rbBrnDw/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -77,16 +106,16 @@ const UserButton = (_props: any) => {
                     body: JSON.stringify({'data':
                     {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
-                        'team': 'R&D', 'user': window.localStorage.user_name,
-                        'checkIn': checkInState.checkIn, 'checkOut': leaveDate, 
-                        'workTime': subtract + " 시간", 'workState': workState, 'working': working
-                    }
+                        'checkOut': leaveDate, 
+                        'workTime': subtract + " 시간", 'workState': workState, 'working': '퇴근'
+                    },
+                    // 쿼리문을 사용해 데이터 업데이트 
+                    "query": `select*from23770whereteam='R&D'`
                 })
                 }
             );
             console.log(res);
-            // 데이터 변경 시 새로고침
-            window.location.reload();
+            // window.location.reload();
         } catch(err){
             console.log('error:', err);
         }   
