@@ -24,11 +24,14 @@ const UserButton = (_props: any) => {
         checkIn: moment().format('YYYY MM월 DD일,HH:mm:ss')
     });
     
-    // 근무 상태 값
-    const [workState, setWorkState] = useState('');
-
     // 단순 연산을 위한 상태값(format x)
     const [workTime, setWorkTime] = useState({});
+
+    // 근무 상태 값
+    const [workState, setWorkState] = useState('');
+    
+    // 출퇴근 상태 값
+    const [working, setWorking] = useState('');
 
     const btnDisable = () => {
         const attendanceDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
@@ -38,6 +41,7 @@ const UserButton = (_props: any) => {
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
         setWorkTime(moment((new Date())));
         setCheckInState({...checkInState, checkIn:attendanceDate});
+        setWorking('출근');
     }
 
     const reverseDisable = async () => {
@@ -47,9 +51,10 @@ const UserButton = (_props: any) => {
         // 단순 연산을 위한 변수(format x)
         const leaveDate2 = Number(moment(new Date()));
         // 퇴근시간 - 출근시간 
-        const subtract = leaveDate2-Number(workTime);
+        const subtract = leaveDate2 - Number(workTime);
         
         setDisable(false);
+        setWorking('퇴근');
 
         // subtract에는 퇴근시간 - 출근시간 의 값이 들어있다.
         // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
@@ -74,13 +79,15 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
                         'team': 'R&D', 'user': window.localStorage.user_name,
-                        'checkIn': checkInState.checkIn, 'checkOut': leaveDate, 'working': '퇴근', 
-                        'workTime': subtract, 'workState': workState
+                        'checkIn': checkInState.checkIn, 'checkOut': leaveDate, 
+                        'workTime': subtract, 'workState': workState, 'working': working
                     }
                 })
                 }
             );
             console.log(res);
+            // 데이터 변경 시 새로고침
+            window.location.reload();
         } catch(err){
             console.log('error:', err);
         }   
