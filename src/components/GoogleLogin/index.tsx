@@ -65,9 +65,9 @@ export const AuthController = (_props: any) => {
               user: row[1],
               checkIn: row[2],
               checkOut: row[3],
-              working: row[4],
-              workTime: row[5],
-              workState: row[6]
+              workTime: row[4],
+              workState: row[5],
+              working: row[6]
             }))
           ));
         });
