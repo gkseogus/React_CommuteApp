@@ -108,11 +108,11 @@ export const AuthController = (_props: any) => {
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = async (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
-    window.localStorage.setItem('user_id', res.googleId);
-    window.localStorage.setItem('user_email', res.Ju.zv);
-    window.localStorage.setItem('user_name', res.Ju.sf);
+    window.sessionStorage.setItem('user_id', res.googleId);
+    window.sessionStorage.setItem('user_email', res.Ju.zv);
+    window.sessionStorage.setItem('user_name', res.Ju.sf);
 
-    console.log('login state:', window.localStorage);
+    console.log('login state:', window.sessionStorage);
     console.log('user name:',res.Ju.sf);
     console.log('user email:',res.Ju.zv);
     window.location.reload();
@@ -123,10 +123,10 @@ export const AuthController = (_props: any) => {
     console.error('Login Fail', err);
   }
 
-  // 로그아웃 버튼 클릭 시 localStorage의 모든 데이터 삭제
+  // 로그아웃 버튼 클릭 시 sessionStorage의 모든 데이터 삭제
   const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
-    window.localStorage.clear();
+    window.sessionStorage.clear();
     window.location.reload();
   }
   
@@ -135,7 +135,7 @@ export const AuthController = (_props: any) => {
   return (
     <div key={'GL'}>
       <LoginUser>
-        {window.localStorage.user_name}님
+        {window.sessionStorage.user_name}님
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>
