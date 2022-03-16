@@ -38,7 +38,9 @@ const UserButton = (_props: any) => {
 
     const btnDisable =  async () => {
         const attendanceDate = moment().format('YYYY MM월 DD일,HH:mm:ss'); 
+        window.sessionStorage.setItem('check_in', attendanceDate);
         console.log('출근시간',attendanceDate);
+        console.log('sessionStorage',window.sessionStorage);
 
         setDisableBtn(true);
         setDisableRevers(false);
@@ -50,7 +52,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/FjiaXFDCsTRfopfP/'
+                'https://api.apispreadsheets.com/data/FkhpuWth62pJNHjn/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -58,9 +60,9 @@ const UserButton = (_props: any) => {
                     },
                     body: JSON.stringify({'data':
                     {
-                        // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
+                        // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
                         'team': 'R&D', 
-                        'user': window.localStorage.user_name,
+                        'user': window.sessionStorage.user_name,
                         'checkIn': attendanceDate, 
                         'workState': '근무미달', 
                         'working': '출근'
@@ -71,12 +73,11 @@ const UserButton = (_props: any) => {
         } catch(err){
             console.log('error:', err);
         }   
-    }
+    };
 
     const reverseDisable = async () => {
         const leaveDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
         console.log('퇴근시간',leaveDate);
-
         setDisableBtn(true);
         setDisableRevers(true);
 
@@ -105,7 +106,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/FjiaXFDCsTRfopfP/'
+                'https://api.apispreadsheets.com/data/FkhpuWth62pJNHjn/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -113,14 +114,14 @@ const UserButton = (_props: any) => {
                     },
                     body: JSON.stringify({'data':
                     {
-                        // 사용자가 로그인을 하면 localStorage에 user_name 값이 남게 된다.
+                        // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
                         'checkOut': leaveDate, 
                         'workTime': subtractHour + " 시간 " + subtractMinute + " 분 " + subtractSecond + " 초", 
                         'workState': workState, 
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23805wherecheckIn='${checkInState.checkIn}'`
+                    "query": `select*from23806wherecheckIn='${checkInState.checkIn}'`
                 })
                 }
             );
@@ -128,14 +129,20 @@ const UserButton = (_props: any) => {
         } catch(err){
             console.log('error:', err);
         }   
-    }
+    };
 
     useEffect(() => {
-        if(window.localStorage.user_name !== undefined){
+        console.log('sessionStorage',window.sessionStorage);
+        // if(window.sessionStorage.check_in !== undefined){
+        //     setDisableBtn(true);
+        //     setDisableRevers(true);
+        //     window.sessionStorage.removeItem('check_in');
+        // }
+        if(window.sessionStorage.user_name !== undefined){
             setDisableBtn(false);
             setDisableRevers(true);
         }
-    },[])
+    },[]);
 
     return (
         <div key={'UB'}>
