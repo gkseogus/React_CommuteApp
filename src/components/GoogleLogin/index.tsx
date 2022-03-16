@@ -105,9 +105,6 @@ export const AuthController = (_props: any) => {
     });
   }, [updateSigninStatus]);
 
-  // 현재 로그인한 사용자의 이름 저장
-  const [loginUserName, setLoginUserName] = useState('');
-
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = async (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
@@ -118,8 +115,7 @@ export const AuthController = (_props: any) => {
     console.log('login state:', window.localStorage);
     console.log('user name:',res.Ju.sf);
     console.log('user email:',res.Ju.zv);
-
-    setLoginUserName(res.Ju.sf);
+    window.location.reload();
   }
 
   // Login Fail
@@ -127,13 +123,11 @@ export const AuthController = (_props: any) => {
     console.error('Login Fail', err);
   }
 
-  // 버튼 클릭 시 로그인 데이터 삭제
+  // 로그아웃 버튼 클릭 시 localStorage의 모든 데이터 삭제
   const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
-    window.localStorage.removeItem('user_id');
-    window.localStorage.removeItem('user_email');
-    window.localStorage.removeItem('user_name');
-    console.log('logout state:', window.localStorage);
+    window.localStorage.clear();
+    window.location.reload();
   }
   
 
@@ -141,7 +135,7 @@ export const AuthController = (_props: any) => {
   return (
     <div key={'GL'}>
       <LoginUser>
-        {loginUserName}님
+        {window.localStorage.user_name}님
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>
