@@ -25,7 +25,7 @@ const UserButton = (_props: any) => {
     const [disableBtn, setDisableBtn] = useState(true);
     const [disableRevers, setDisableRevers] = useState(true);
 
-    // 출근 상태 값 (reverseDisable에 넣어주기 위함)
+    // 출근 상태 값
     const [checkInState, setCheckInState] = useState({
         checkIn: ''
     });
@@ -44,7 +44,7 @@ const UserButton = (_props: any) => {
 
         setDisableBtn(true);
         setDisableRevers(false);
-        
+
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
         setWorkTime(moment((new Date())));
         setCheckInState({...checkInState, checkIn:attendanceDate});
@@ -52,7 +52,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/FkhpuWth62pJNHjn/'
+                'https://api.apispreadsheets.com/data/IxoUOLlq0fugyNwL/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -65,11 +65,13 @@ const UserButton = (_props: any) => {
                         'user': window.sessionStorage.user_name,
                         'checkIn': attendanceDate, 
                         'workState': '근무미달', 
-                        'working': '출근'
+                        'working': '출근',
+                        'key': window.sessionStorage.user_id
                     }
                 })
                 }
             );
+        window.location.reload();
         } catch(err){
             console.log('error:', err);
         }   
@@ -77,7 +79,10 @@ const UserButton = (_props: any) => {
 
     const reverseDisable = async () => {
         const leaveDate = moment(new Date()).format('YYYY MM월 DD일,HH:mm:ss'); 
+        window.sessionStorage.setItem('check_out', leaveDate);
         console.log('퇴근시간',leaveDate);
+        console.log('sessionStorage',window.sessionStorage);
+
         setDisableBtn(true);
         setDisableRevers(true);
 
@@ -90,23 +95,22 @@ const UserButton = (_props: any) => {
         const subtractSecond = Math.floor(((leaveDate2 - Number(workTime))/1000));
 
         // subtractHour에는 퇴근시간 - 출근시간 의 시 값이 들어있다.
-        // 이 값이 3.24e+7(9시간을 ms로 환산한 값, 32400000)보다 작으면 근무미달
-        if (subtractHour < 3.24e+7) {
-            console.log('근무시간:',subtractHour,'시간',subtractMinute,'분',subtractSecond,'초',' 근무미달');
-            setWorkState('근무미달');
-        }
-        else if (subtractHour >= 3.24e+7) {
+        if (subtractHour >=  9) {
             console.log('정상');
             setWorkState('정상');
         }
+        else if (subtractHour <  9) {
+            console.log('근무시간:',subtractHour,'시간',subtractMinute,'분',subtractSecond,'초',' 근무미달');
+            setWorkState('근무미달');
+        }
         else {
-            console.log('undefined');
-            setWorkState('undefined');
+            console.log('근무상태 오류');
+            setWorkState('근무상태 오류');
         }
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/FkhpuWth62pJNHjn/'
+                'https://api.apispreadsheets.com/data/IxoUOLlq0fugyNwL/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -121,7 +125,7 @@ const UserButton = (_props: any) => {
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23806wherecheckIn='${checkInState.checkIn}'`
+                    "query": `select*from23809wherekey='${window.sessionStorage.user_id}'`
                 })
                 }
             );
@@ -131,15 +135,22 @@ const UserButton = (_props: any) => {
         }   
     };
 
+    // 출퇴근 버튼 활성화 조건
     useEffect(() => {
-        console.log('sessionStorage',window.sessionStorage);
-        // if(window.sessionStorage.check_in !== undefined){
-        //     setDisableBtn(true);
-        //     setDisableRevers(true);
-        //     window.sessionStorage.removeItem('check_in');
-        // }
-        if(window.sessionStorage.user_name !== undefined){
+        console.log('sessionStorage check_in',window.sessionStorage.check_in);
+        console.log('sessionStorage check_out',window.sessionStorage.check_out);
+
+        if(window.sessionStorage.user_name !== undefined && window.sessionStorage.check_in === undefined){
+            console.log('로그인 성공');
             setDisableBtn(false);
+        }
+        else if(window.sessionStorage.check_in !== undefined && window.sessionStorage.check_out === undefined){
+            console.log('출근버튼 클릭');
+            setDisableBtn(true);
+            setDisableRevers(false);
+        }
+        else if(window.localStorage.check_out !== undefined && window.sessionStorage.check_out !== undefined){
+            console.log('퇴근버튼 클릭');
             setDisableRevers(true);
         }
     },[]);
