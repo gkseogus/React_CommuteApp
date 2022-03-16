@@ -25,13 +25,8 @@ const UserButton = (_props: any) => {
     const [disableBtn, setDisableBtn] = useState(true);
     const [disableRevers, setDisableRevers] = useState(true);
 
-    // 출근 상태 값
-    const [checkInState, setCheckInState] = useState({
-        checkIn: ''
-    });
-    
-    // 단순 연산을 위한 상태값(format x)
-    const [workTime, setWorkTime] = useState({});
+    // moment 연산을 위한 상태 값 재지정
+    const [workTime, setWorkTime] = useState(moment());
 
     // 근무 상태 값
     const [workState, setWorkState] = useState('근무미달');
@@ -47,12 +42,11 @@ const UserButton = (_props: any) => {
 
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
         setWorkTime(moment((new Date())));
-        setCheckInState({...checkInState, checkIn:attendanceDate});
 
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/IxoUOLlq0fugyNwL/'
+                'https://api.apispreadsheets.com/data/loZyKVxYh8vRlTOV/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -83,24 +77,24 @@ const UserButton = (_props: any) => {
         console.log('퇴근시간',leaveDate);
         console.log('sessionStorage',window.sessionStorage);
 
+        // moment 연산을 위한 변수 재지정
+        const leaveDate2 = moment(new Date());
+
         setDisableBtn(true);
         setDisableRevers(true);
 
-        // 단순 연산을 위한 변수(format x)
-        const leaveDate2 = Number(moment(new Date()));
+        // 퇴근시간 - 출근시간 (ms 단위의 결과값을 1000으로 나눔)
+        const subtractHours = (moment.duration(leaveDate2.diff(workTime, 'hours')).asHours())*1000;
+        const subtractMinute = (moment.duration(leaveDate2.diff(workTime, 'minutes')).asMinutes())*1000;
+        const subtractSecond = (moment.duration(leaveDate2.diff(workTime, 'seconds')).asSeconds())*1000;
 
-        // 퇴근시간 - 출근시간 
-        const subtractHour = Math.floor(((leaveDate2 - Number(workTime))/1000)/60/60);
-        const subtractMinute = Math.floor(((leaveDate2 - Number(workTime))/1000)/60);
-        const subtractSecond = Math.floor(((leaveDate2 - Number(workTime))/1000));
-
-        // subtractHour에는 퇴근시간 - 출근시간 의 시 값이 들어있다.
-        if (subtractHour >=  9) {
+        // subtractHours에는 퇴근시간 - 출근시간 의 시 값이 들어있다.
+        if (subtractHours >=  9) {
             console.log('정상');
             setWorkState('정상');
         }
-        else if (subtractHour <  9) {
-            console.log('근무시간:',subtractHour,'시간',subtractMinute,'분',subtractSecond,'초',' 근무미달');
+        else if (subtractHours <  9) {
+            console.log('근무시간:',subtractHours,'시간',subtractMinute,'분',subtractSecond,'초',' 근무미달');
             setWorkState('근무미달');
         }
         else {
@@ -110,7 +104,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/IxoUOLlq0fugyNwL/'
+                'https://api.apispreadsheets.com/data/loZyKVxYh8vRlTOV/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -120,12 +114,12 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
                         'checkOut': leaveDate, 
-                        'workTime': subtractHour + " 시간 " + subtractMinute + " 분 " + subtractSecond + " 초", 
+                        'workTime': subtractHours + ' 시간 ' + subtractMinute + ' 분 ' + subtractSecond + ' 초 ',
                         'workState': workState, 
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23809wherekey='${window.sessionStorage.user_id}'`
+                    "query": `select*from23820wherekey='${window.sessionStorage.user_id}'`
                 })
                 }
             );
