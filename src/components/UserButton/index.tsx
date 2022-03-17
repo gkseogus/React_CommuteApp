@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { teamDate } from '../../teamData';
 
 const Container = styled.div`
     position: fixed;
@@ -41,6 +42,14 @@ const UserButton = (_props: any) => {
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
         setWorkTime(moment((new Date())));
 
+        // 로그인 사용자의 id를 조회해 팀 값을 결정
+        let team = '';
+        for (let i=0; i<teamDate.length; i++) {
+            if(teamDate[i].key === window.sessionStorage.user_id){
+                team = teamDate[i].team;
+            }
+        }
+
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
@@ -53,7 +62,7 @@ const UserButton = (_props: any) => {
                     body: JSON.stringify({'data':
                     {
                         // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
-                        'team': 'R&D', 
+                        'team': team, 
                         'user': window.sessionStorage.user_name,
                         'checkIn': attendanceDate, 
                         'workState': '근무미달', 
