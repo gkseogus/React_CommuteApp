@@ -27,12 +27,13 @@ const UserButton = (_props: any) => {
     const [disableRevers, setDisableRevers] = useState(true);
 
     // moment 연산을 위한 상태 값 재지정
-    const [workTime, setWorkTime] = useState(moment());
+    const [workTimeState, setWorkTimeState] = useState(moment());
 
     const btnDisable =  async () => {
+        const workTimeValue = moment(new Date());
         const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss'); 
 
-        window.sessionStorage.setItem('check_in', String(attendanceDate));
+        window.sessionStorage.setItem('check_in', attendanceDate);
         console.log('출근시간',attendanceDate);
         // console.log('sessionStorage',window.sessionStorage);
 
@@ -40,7 +41,7 @@ const UserButton = (_props: any) => {
         setDisableRevers(false);
 
         // 출근버튼 클릭 시 workTime에 출근시간 값 저장
-        setWorkTime(moment((new Date())));
+        setWorkTimeState(workTimeValue);
 
         // 로그인 사용자의 id를 조회해 팀 값을 결정
         let team = '';
@@ -53,7 +54,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/3aHmY2yKzbMDLJbI/'
+                'https://api.apispreadsheets.com/data/w6I3vt97rCMdHFPh/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -78,21 +79,21 @@ const UserButton = (_props: any) => {
         }   
     };
 
-    const reverseDisable = async () => {
-        const leaveDate = moment(new Date()).format('YYYY MM월 DD일, HH:mm:ss'); 
-        window.sessionStorage.setItem('check_out', leaveDate);
-        console.log('퇴근시간',leaveDate);
-        // console.log('sessionStorage',window.sessionStorage);
-
+const reverseDisable = async () => {
         // moment 연산을 위한 변수 재지정
-        const leaveDate2 = moment(new Date());
+        const leaveDate = moment(new Date());
+        
+        const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss'); 
+        window.sessionStorage.setItem('check_out', leaveDateFormat);
+        console.log('퇴근시간',leaveDateFormat);
+        // console.log('sessionStorage',window.sessionStorage);
 
         setDisableBtn(true);
         setDisableRevers(true);
 
         // 퇴근시간 - 출근시간 
-        const subtractTime = moment(leaveDate2, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTime, 'YYYY MM월 DD일, HH:mm:ss'));
-        const momentDuration = moment.duration(subtractTime-2);
+        const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTimeState, 'YYYY MM월 DD일, HH:mm:ss'));
+        const momentDuration = moment.duration(subtractTime);
         const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
 
         // 시간으로만 근무상태를 판별하기 위한 변수
@@ -102,7 +103,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/3aHmY2yKzbMDLJbI/'
+                'https://api.apispreadsheets.com/data/w6I3vt97rCMdHFPh/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -111,13 +112,13 @@ const UserButton = (_props: any) => {
                     body: JSON.stringify({'data':
                     {
                         // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
-                        'checkOut': leaveDate, 
+                        'checkOut': leaveDateFormat, 
                         'workTime': time,
                         'workState': workState, 
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23851wherekey='${window.sessionStorage.user_id}'`
+                    "query": `select*from23854wherekey='${window.sessionStorage.user_id}'`
                 })
                 }
             );
