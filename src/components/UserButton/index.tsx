@@ -122,7 +122,7 @@ const reverseDisable = async () => {
                 })
                 }
             );
-            window.location.reload();
+            // window.location.reload();
         } catch(err){
             console.log('error:', err);
         }   
@@ -158,4 +158,4 @@ const reverseDisable = async () => {
     );
 };
 
-export default UserButton;
+export default React.memo(UserButton);

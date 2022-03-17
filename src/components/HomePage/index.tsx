@@ -192,4 +192,4 @@ const HomePage = (_props: any) => {
   );
 };
 
-export default HomePage;
+export default React.memo(HomePage);
