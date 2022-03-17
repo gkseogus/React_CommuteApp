@@ -54,7 +54,7 @@ const UserButton = (_props: any) => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/w6I3vt97rCMdHFPh/'
+                'https://api.apispreadsheets.com/data/Nh9pTAV8Fhtpq10E/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -103,7 +103,7 @@ const reverseDisable = async () => {
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const res = await fetch(
-                'https://api.apispreadsheets.com/data/w6I3vt97rCMdHFPh/'
+                'https://api.apispreadsheets.com/data/Nh9pTAV8Fhtpq10E/'
                 ,{
                     method: 'POST',
                     headers: {
@@ -118,7 +118,7 @@ const reverseDisable = async () => {
                         'working': '퇴근'
                     },
                     // 쿼리문을 사용해 데이터 업데이트 
-                    "query": `select*from23854wherekey='${window.sessionStorage.user_id}'`
+                    "query": `select*from23858wherekey='${window.sessionStorage.user_id}'`
                 })
                 }
             );
