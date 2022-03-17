@@ -93,7 +93,7 @@ const UserButton = (_props: any) => {
         // 퇴근시간 - 출근시간 
         const subtractTime = moment(leaveDate2, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTime, 'YYYY MM월 DD일, HH:mm:ss'));
         const momentDuration = moment.duration(subtractTime-2);
-        const time = Math.floor(momentDuration.asHours()) + moment.utc(subtractTime).format('H시간 mm분 ss초');
+        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
 
         // 시간으로만 근무상태를 판별하기 위한 변수
         const workHours = Math.floor(momentDuration.asHours());
