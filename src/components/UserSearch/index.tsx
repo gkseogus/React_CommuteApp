@@ -40,4 +40,4 @@ const UserSearch = (_props: any) => {
   );
 };
 
-export default UserSearch;
+export default React.memo(UserSearch);

@@ -159,4 +159,4 @@ export const AuthController = (_props: any) => {
   );
 }
 
-export default AuthController;
+export default React.memo(AuthController);

@@ -13,4 +13,4 @@ const HomeDatePicker = (_props: any) => {
   );
 };
 
-export default HomeDatePicker;
+export default React.memo(HomeDatePicker);
