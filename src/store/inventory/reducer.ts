@@ -11,13 +11,10 @@ export const initialState: InventoryState = {
   loading: false,
 };
 
-// reducer : dispatch안 action의 type을 확인하고
-// 그에 맞는 동작을 한다.
 const reducer: Reducer<InventoryState> = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_SUCCESS: {
-      console.log('action payload', action.payload);
-      // 단지 store의 상태만 수정
+      // console.log('action payload', action.payload);
       return { ...state, loading: false, data: action.payload };
     }
     case FETCH_ERROR: {
