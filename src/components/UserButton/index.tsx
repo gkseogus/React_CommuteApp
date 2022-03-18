@@ -94,7 +94,7 @@ const reverseDisable = async () => {
         // 퇴근시간 - 출근시간 
         const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTimeState, 'YYYY MM월 DD일, HH:mm:ss'));
         const momentDuration = moment.duration(subtractTime);
-        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).add(2.6, 'seconds').format(' mm 분 ss 초');
+        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).add(3, 'seconds').format(' mm 분 ss 초');
 
         // 시간으로만 근무상태를 판별하기 위한 변수
         const workHours = Math.floor(momentDuration.asHours());
@@ -122,7 +122,7 @@ const reverseDisable = async () => {
                 })
                 }
             );
-            // window.location.reload();
+            window.location.reload();
         } catch(err){
             console.log('error:', err);
         }   
