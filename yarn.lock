@@ -10326,6 +10326,13 @@ react-loader-spinner@^6.0.0-0:
     styled-tools "^1.7.2"
     tslib "^2.3.0"
 
+react-promise-loader@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-promise-loader/-/react-promise-loader-1.1.2.tgz#3e1af6b69f4096c00385e910704fd91e2df5cbb2"
+  integrity sha512-HEfUoa1uIEU/ClwSeXqmyX/Vi0O8Cc3AgeRuIWtXdu/j3VLlM1xnf6xJldO4POIqn7sMisVziBjWVpyilCPORQ==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-promise-tracker@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-promise-tracker/-/react-promise-tracker-2.1.0.tgz#a8ac2ca5322ca60f83fa7a00ad9d99bfbbdb8434"
