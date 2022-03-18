@@ -64,7 +64,7 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
                         'team': team, 
-                        'user': window.localStorage.user_name,
+                        'user': window.sessionStorage.user_name,
                         'checkIn': attendanceDate, 
                         'workState': '근무미달', 
                         'working': '출근',
@@ -133,7 +133,7 @@ const reverseDisable = async () => {
         // console.log('sessionStorage check_in',window.sessionStorage.check_in);
         // console.log('sessionStorage check_out',window.sessionStorage.check_out);
 
-        if(window.localStorage.user_name !== undefined && window.sessionStorage.check_in === undefined){
+        if(window.sessionStorage.user_name !== undefined && window.sessionStorage.check_in === undefined){
             console.log('로그인 성공');
             setDisableBtn(false);
         }

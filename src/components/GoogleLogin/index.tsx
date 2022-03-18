@@ -110,7 +110,7 @@ export const AuthController = (_props: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
     window.sessionStorage.setItem('user_id', res.googleId);
     window.sessionStorage.setItem('user_email', res.Ju.zv);
-    window.localStorage.setItem('user_name', res.Ju.sf);
+    window.sessionStorage.setItem('user_name', res.Ju.sf);
 
     console.log('login state:', window.sessionStorage);
     console.log('user name:',res.Ju.sf);
