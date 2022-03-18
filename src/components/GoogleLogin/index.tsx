@@ -110,7 +110,7 @@ export const AuthController = (_props: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
     window.sessionStorage.setItem('user_id', res.googleId);
     window.sessionStorage.setItem('user_email', res.Ju.zv);
-    window.sessionStorage.setItem('user_name', res.Ju.sf);
+    window.localStorage.setItem('user_name', res.Ju.sf);
 
     console.log('login state:', window.sessionStorage);
     console.log('user name:',res.Ju.sf);
@@ -127,6 +127,7 @@ export const AuthController = (_props: any) => {
   const handleSignoutClick = () => {
     window.gapi.auth2.getAuthInstance().signOut();
     window.sessionStorage.clear();
+    window.localStorage.clear();
     window.location.reload();
   }
   
@@ -135,7 +136,7 @@ export const AuthController = (_props: any) => {
   return (
     <div key={'GL'}>
       <LoginUser>
-        {window.sessionStorage.user_name}님
+        {window.localStorage.user_name}님
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>

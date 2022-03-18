@@ -64,7 +64,7 @@ const UserButton = (_props: any) => {
                     {
                         // 사용자가 로그인을 하면 sessionStorage에 user_name 값이 남게 된다.
                         'team': team, 
-                        'user': window.sessionStorage.user_name,
+                        'user': window.localStorage.user_name,
                         'checkIn': attendanceDate, 
                         'workState': '근무미달', 
                         'working': '출근',
@@ -94,7 +94,7 @@ const reverseDisable = async () => {
         // 퇴근시간 - 출근시간 
         const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTimeState, 'YYYY MM월 DD일, HH:mm:ss'));
         const momentDuration = moment.duration(subtractTime);
-        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).add(2.5, 'seconds').format(' mm 분 ss 초');
+        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).add(2.6, 'seconds').format(' mm 분 ss 초');
 
         // 시간으로만 근무상태를 판별하기 위한 변수
         const workHours = Math.floor(momentDuration.asHours());
@@ -133,7 +133,7 @@ const reverseDisable = async () => {
         // console.log('sessionStorage check_in',window.sessionStorage.check_in);
         // console.log('sessionStorage check_out',window.sessionStorage.check_out);
 
-        if(window.sessionStorage.user_name !== undefined && window.sessionStorage.check_in === undefined){
+        if(window.localStorage.user_name !== undefined && window.sessionStorage.check_in === undefined){
             console.log('로그인 성공');
             setDisableBtn(false);
         }
