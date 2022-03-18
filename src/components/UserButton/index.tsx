@@ -27,11 +27,7 @@ const UserButton = (_props: any) => {
     const [disableBtn, setDisableBtn] = useState(true);
     const [disableRevers, setDisableRevers] = useState(true);
 
-    // moment 연산을 위한 상태 값 재지정
-    const [workTimeState, setWorkTimeState] = useState(moment());
-
     const btnDisable =  async () => {
-        const workTimeValue = moment(new Date());
         const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss'); 
 
         window.sessionStorage.setItem('check_in', attendanceDate);
@@ -40,9 +36,6 @@ const UserButton = (_props: any) => {
 
         setDisableBtn(true);
         setDisableRevers(false);
-
-        // 출근버튼 클릭 시 workTime에 출근시간 값 저장
-        setWorkTimeState(workTimeValue);
 
         // 로그인 사용자의 id를 조회해 팀 값을 결정
         let team = '';
@@ -93,9 +86,9 @@ const reverseDisable = async () => {
         setDisableRevers(true);
 
         // 퇴근시간 - 출근시간 
-        const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(workTimeState, 'YYYY MM월 DD일, HH:mm:ss'));
+        const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(window.sessionStorage.check_in, 'YYYY MM월 DD일, HH:mm:ss'));
         const momentDuration = moment.duration(subtractTime);
-        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).add(3, 'seconds').format(' mm 분 ss 초');
+        const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
 
         // 시간으로만 근무상태를 판별하기 위한 변수
         const workHours = Math.floor(momentDuration.asHours());
