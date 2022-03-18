@@ -136,7 +136,7 @@ export const AuthController = (_props: any) => {
   return (
     <div key={'GL'}>
       <LoginUser>
-        {window.localStorage.user_name}님
+        {window.sessionStorage.user_name}님
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>
