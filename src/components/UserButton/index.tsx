@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { teamDate } from '../../teamData';
+import { trackPromise } from 'react-promise-tracker';
 
 const Container = styled.div`
     position: fixed;
@@ -53,7 +54,7 @@ const UserButton = (_props: any) => {
 
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = await fetch(
+            const res = await trackPromise(fetch(
                 'https://api.apispreadsheets.com/data/jyOkNjgGHsnwByrN/'
                 ,{
                     method: 'POST',
@@ -72,7 +73,7 @@ const UserButton = (_props: any) => {
                     }
                 })
                 }
-            );
+            ));
         window.location.reload();
         } catch(err){
             console.log('error:', err);
@@ -102,7 +103,7 @@ const reverseDisable = async () => {
 
         try {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = await fetch(
+            const res = await trackPromise(fetch(
                 'https://api.apispreadsheets.com/data/jyOkNjgGHsnwByrN/'
                 ,{
                     method: 'POST',
@@ -121,7 +122,7 @@ const reverseDisable = async () => {
                     "query": `select*from23875wherekey='${window.sessionStorage.user_id}'`
                 })
                 }
-            );
+            ));
             window.location.reload();
         } catch(err){
             console.log('error:', err);

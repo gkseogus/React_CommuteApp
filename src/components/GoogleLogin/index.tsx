@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { fetchRequest } from '../../store/inventory/action';
 import styled from 'styled-components';
 import { GoogleLogin,GoogleLogout } from 'react-google-login';
+import { trackPromise } from 'react-promise-tracker';
 
 const LoginContain = styled.div`
   position: fixed;
@@ -49,7 +50,7 @@ export const AuthController = (_props: any) => {
 
     if (isSignedIn) {
       // 로그인 성공시 스프레트 시트를 불러옴
-      window.gapi.client.sheets.spreadsheets.values
+      trackPromise(window.gapi.client.sheets.spreadsheets.values
         .get({
           spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
           range: 'A2:G16',
@@ -70,7 +71,7 @@ export const AuthController = (_props: any) => {
               working: row[6]
             }))
           ));
-        });
+        }));
     } else {
       // 로그아웃시 redux store에서 값 clear
       fetchRequest([]);
