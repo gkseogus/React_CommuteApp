@@ -13,7 +13,8 @@ const LoginUser = styled.div`
   position: fixed;
   right: 300px;
   padding:5px;
-  font-size: bord;
+  font-size: 20px;
+  font-weight: bold;
 `
 // javascript 로 로드되어있는 구글 api를 사용하기 위해 타입 정의
 // declare는 컴파일이 되지 않고 타입 정보만 알린다.
@@ -112,6 +113,7 @@ export const AuthController = (_props: any) => {
     window.sessionStorage.setItem('user_id', res.googleId);
     window.sessionStorage.setItem('user_email', res.Ju.zv);
     window.sessionStorage.setItem('user_name', res.Ju.sf);
+    window.sessionStorage.setItem('user_name2', `안녕하세요! ${res.Ju.sf}님`);
 
     console.log('login state:', window.sessionStorage);
     console.log('user name:',res.Ju.sf);
@@ -137,7 +139,7 @@ export const AuthController = (_props: any) => {
   return (
     <div key={'GL'}>
       <LoginUser>
-        {window.sessionStorage.user_name}님
+        {window.sessionStorage.user_name2}
       </LoginUser>
       {isSignedIn ? (
         <LoginContain>
