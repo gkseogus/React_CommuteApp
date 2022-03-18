@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePromiseTracker } from 'react-promise-tracker';
 import styled from 'styled-components';
+import { BallTriangle }  from 'react-loader-spinner';
 
 const Container = styled.div`
   position: absolute;
@@ -17,7 +18,14 @@ const LoadingIndicator = (_props: any) => {
       <Container>
         {
           promiseInProgress && 
-          <h1>Loading...</h1>
+          <BallTriangle 
+            color='black'
+          >
+          </BallTriangle>
+        }
+        {
+          promiseInProgress && 
+          <h1>loading...</h1>
         }
       </Container>
     </div>
