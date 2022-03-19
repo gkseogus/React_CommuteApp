@@ -1,21 +1,22 @@
+import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchRequest } from '../../store/inventory/action';
-import styled from 'styled-components';
-import { GoogleLogin,GoogleLogout } from 'react-google-login';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { trackPromise } from 'react-promise-tracker';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { fetchRequest } from '../../store/inventory/action';
 
 const LoginContain = styled.div`
   position: fixed;
   right: 150px;
-`
+`;
 const LoginUser = styled.div`
   position: fixed;
   right: 300px;
-  padding:5px;
+  padding: 5px;
   font-size: 20px;
   font-weight: bold;
-`
+`;
 // javascript 로 로드되어있는 구글 api를 사용하기 위해 타입 정의
 // declare는 컴파일이 되지 않고 타입 정보만 알린다.
 declare const window: Window & {
@@ -29,14 +30,51 @@ declare const window: Window & {
  */
 
 // 개발자 콘솔에서 불러올 클라이언트 ID 및 API 키
-var CLIENT_ID = '653145946472-jn4efggid62mt7ceunkrvehioalffl32.apps.googleusercontent.com';
+var CLIENT_ID =
+  '653145946472-jn4efggid62mt7ceunkrvehioalffl32.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyBG1aL8KaNnVAT4BLSNJRgrCrqrxXEi8pY';
 
 // quickstart에서 사용하는 API용 API 탐색 문서 URL 배열
-var DISCOVERY_DOCS = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
+var DISCOVERY_DOCS = [
+  'https://sheets.googleapis.com/$discovery/rest?version=v4',
+];
 
 // API에 필요한 인증 범위
-var SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+
+async function getSheet(key: string) {
+  const res = await window.gapi.client.sheets.spreadsheets.get({
+    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+    ranges: [],
+    // sheet 목록을 조회할 때 테이블 전체 데이터도 포함
+    includeGridData: true,
+  });
+  // title과 Key 가 매칭되는 시트 찾기
+  return res.result.sheets.find((sheet: any) => sheet.properties.title === key);
+}
+
+async function loadTodaySheet() {
+  const todayKey = moment().format('YYYY-MM-DD');
+  // 오늘 날짜에 해당하는 시트를 조회
+  const todaySheet = await getSheet(todayKey);
+  if (todaySheet) {
+    return todaySheet;
+  }
+  // 오늘 날짜에 해당하는 시트가 없는 경우 새로 생성
+  await window.gapi.client.sheets.spreadsheets.batchUpdate(
+    { spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ' },
+    {
+      requests: [
+        {
+          addSheet: {
+            properties: { title: todayKey },
+          },
+        },
+      ],
+    }
+  );
+  return await getSheet(todayKey);
+}
 
 export const AuthController = (_props: any) => {
   // 구글 로그인 여부 상태 값
@@ -45,39 +83,41 @@ export const AuthController = (_props: any) => {
   const dispatch = useDispatch();
 
   // 구글 로그인 상태가 변경되었을 때 호출되는 함수
-  const updateSigninStatus = useCallback((isSignedIn: boolean) => {
-    // 로그인 여부 상태값 업데이트
-    setIsSignedIn(isSignedIn);
+  const updateSigninStatus = useCallback(
+    (isSignedIn: boolean) => {
+      // 로그인 여부 상태값 업데이트
+      setIsSignedIn(isSignedIn);
 
-    if (isSignedIn) {
-      // 로그인 성공시 스프레트 시트를 불러옴
-      trackPromise(window.gapi.client.sheets.spreadsheets.values
-        .get({
-          spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-          range: 'A2:G16',
-        })
-        .then((response: any) => {
-          // uuid 로 특정 key 값 설정
-          const { v4: uuidv4 } = require('uuid');
-          // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-          dispatch(fetchRequest(
-            response.result.values.map((row: string[]) => ({
-              key: uuidv4(),
-              team: row[0],
-              user: row[1],
-              checkIn: row[2],
-              checkOut: row[3],
-              workTime: row[4],
-              workState: row[5],
-              working: row[6]
-            }))
-          ));
-        }));
-    } else {
-      // 로그아웃시 redux store에서 값 clear
-      fetchRequest([]);
-    }
-  }, [dispatch]);
+      if (isSignedIn) {
+        // 로그인 성공시 스프레트 시트를 불러옴
+        trackPromise(
+          loadTodaySheet().then((response: any) => {
+            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+            dispatch(
+              fetchRequest(
+                response.data[0].rowData.map(
+                  (row: { values: { formattedValue: string }[] }) => ({
+                    key: row.values[7].formattedValue,
+                    team: row.values[0].formattedValue,
+                    user: row.values[1].formattedValue,
+                    checkIn: row.values[2].formattedValue,
+                    checkOut: row.values[3].formattedValue,
+                    workTime: row.values[4].formattedValue,
+                    workState: row.values[5].formattedValue,
+                    working: row.values[6].formattedValue,
+                  })
+                )
+              )
+            );
+          })
+        );
+      } else {
+        // 로그아웃시 redux store에서 값 clear
+        fetchRequest([]);
+      }
+    },
+    [dispatch]
+  );
 
   // AuthController 컴포넌트가 처음 렌더링 될 때 (마운트 될 때) 호출됨.
   useEffect(() => {
@@ -88,7 +128,7 @@ export const AuthController = (_props: any) => {
           apiKey: API_KEY,
           clientId: CLIENT_ID,
           discoveryDocs: DISCOVERY_DOCS, // API의 검색 문서는 API의 표면, API에 액세스하는 방법, API 요청 및 응답이 구조화되는 방법을 설명
-          scope: SCOPES
+          scope: SCOPES,
         });
 
         // 로그인 상태 변경을 위한 listen(연결 요청 대기 메소드)
@@ -116,15 +156,15 @@ export const AuthController = (_props: any) => {
     window.sessionStorage.setItem('user_name2', `안녕하세요! ${res.Ju.sf}님`);
 
     console.log('login state:', window.sessionStorage);
-    console.log('user name:',res.Ju.sf);
-    console.log('user email:',res.Ju.zv);
+    console.log('user name:', res.Ju.sf);
+    console.log('user email:', res.Ju.zv);
     window.location.reload();
-  }
+  };
 
   // Login Fail
   const responseFail = (err: void) => {
     console.error('Login Fail', err);
-  }
+  };
 
   // 로그아웃 버튼 클릭 시 sessionStorage의 모든 데이터 삭제
   const handleSignoutClick = () => {
@@ -132,35 +172,32 @@ export const AuthController = (_props: any) => {
     window.sessionStorage.clear();
     window.localStorage.clear();
     window.location.reload();
-  }
-  
+  };
 
   // 로그인 여부 상태값에 따라 Sign In / Sign Out 버튼 렌더링
   return (
     <div key={'GL'}>
-      <LoginUser>
-        {window.sessionStorage.user_name2}
-      </LoginUser>
+      <LoginUser>{window.sessionStorage.user_name2}</LoginUser>
       {isSignedIn ? (
         <LoginContain>
-          <GoogleLogout            
+          <GoogleLogout
             clientId={CLIENT_ID}
-            buttonText='Sign Out'
-            onLogoutSuccess={handleSignoutClick}>
-          </GoogleLogout>
+            buttonText="Sign Out"
+            onLogoutSuccess={handleSignoutClick}
+          ></GoogleLogout>
         </LoginContain>
       ) : (
         <LoginContain>
-          <GoogleLogin                     
+          <GoogleLogin
             clientId={CLIENT_ID}
-            buttonText='Sign In'
+            buttonText="Sign In"
             onSuccess={handleAuthClick}
-            onFailure={responseFail}>
-          </GoogleLogin>
-       </LoginContain>
+            onFailure={responseFail}
+          ></GoogleLogin>
+        </LoginContain>
       )}
     </div>
   );
-}
+};
 
 export default React.memo(AuthController);
