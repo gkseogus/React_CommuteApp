@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export async function loadTodaySheet() {
+export const loadTodaySheet = async () => {
   const todayKey = moment().format('YYYY-MM-DD');
   // 오늘 날짜에 해당하는 시트를 조회
   const todaySheet = await getSheet(todayKey);
@@ -23,11 +23,11 @@ export async function loadTodaySheet() {
   return await getSheet(todayKey);
 }
 
-export function checkGapi() {
+export const checkGapi = () => {
   return window.gapi.client != null;
 }
 
-export async function getSheet(key: string) {
+export const getSheet = async (key: string) => {
   const res = await window.gapi.client.sheets.spreadsheets.get({
     spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
     ranges: [],
@@ -38,7 +38,7 @@ export async function getSheet(key: string) {
   return res.result.sheets.find((sheet: any) => sheet.properties.title === key);
 }
 
-export function converToState(sheet: any) {
+export const converToState = (sheet: any) => {
   const data = sheet?.data?.[0]?.rowData;
   if (!data) {
     return [];
