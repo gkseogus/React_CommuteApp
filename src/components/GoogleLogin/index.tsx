@@ -1,10 +1,10 @@
-import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import { trackPromise } from 'react-promise-tracker';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { fetchRequest } from '../../store/inventory/action';
+import { converToState, loadTodaySheet } from './load-sheet';
 
 const LoginContain = styled.div`
   position: fixed;
@@ -19,9 +19,11 @@ const LoginUser = styled.div`
 `;
 // javascript 로 로드되어있는 구글 api를 사용하기 위해 타입 정의
 // declare는 컴파일이 되지 않고 타입 정보만 알린다.
-declare const window: Window & {
-  gapi: any;
-};
+declare global {
+  interface Window {
+    gapi: any;
+  }
+}
 
 /**
  * 전체적으로 index.html 에 작성되어 있는 코드를 컴포넌트 화 시킴 (https://developers.google.com/sheets/api/quickstart/js)
@@ -42,40 +44,6 @@ var DISCOVERY_DOCS = [
 // API에 필요한 인증 범위
 var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
-async function getSheet(key: string) {
-  const res = await window.gapi.client.sheets.spreadsheets.get({
-    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-    ranges: [],
-    // sheet 목록을 조회할 때 테이블 전체 데이터도 포함
-    includeGridData: true,
-  });
-  // title과 Key 가 매칭되는 시트 찾기
-  return res.result.sheets.find((sheet: any) => sheet.properties.title === key);
-}
-
-async function loadTodaySheet() {
-  const todayKey = moment().format('YYYY-MM-DD');
-  // 오늘 날짜에 해당하는 시트를 조회
-  const todaySheet = await getSheet(todayKey);
-  if (todaySheet) {
-    return todaySheet;
-  }
-  // 오늘 날짜에 해당하는 시트가 없는 경우 새로 생성
-  await window.gapi.client.sheets.spreadsheets.batchUpdate(
-    { spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ' },
-    {
-      requests: [
-        {
-          addSheet: {
-            properties: { title: todayKey },
-          },
-        },
-      ],
-    }
-  );
-  return await getSheet(todayKey);
-}
-
 export const AuthController = (_props: any) => {
   // 구글 로그인 여부 상태 값
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -93,22 +61,7 @@ export const AuthController = (_props: any) => {
         trackPromise(
           loadTodaySheet().then((response: any) => {
             // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-            dispatch(
-              fetchRequest(
-                response.data[0].rowData.map(
-                  (row: { values: { formattedValue: string }[] }) => ({
-                    key: row.values[7].formattedValue,
-                    team: row.values[0].formattedValue,
-                    user: row.values[1].formattedValue,
-                    checkIn: row.values[2].formattedValue,
-                    checkOut: row.values[3].formattedValue,
-                    workTime: row.values[4].formattedValue,
-                    workState: row.values[5].formattedValue,
-                    working: row.values[6].formattedValue,
-                  })
-                )
-              )
-            );
+            dispatch(fetchRequest(converToState(response)));
           })
         );
       } else {
