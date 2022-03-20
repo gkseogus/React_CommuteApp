@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../../store';
 import HomeDatePicker from '../DatePicker';
-import { checkGapi, converToState, getSheet } from '../GoogleLogin/load-sheet';
+import { checkGapi, converToState, getSheet } from '../GoogleSheet';
 import UserButton from '../UserButton';
 import UserSearch from '../UserSearch';
 

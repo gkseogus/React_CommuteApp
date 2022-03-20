@@ -4,7 +4,7 @@ import { trackPromise } from 'react-promise-tracker';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { fetchRequest } from '../../store/inventory/action';
-import { converToState, loadTodaySheet } from './load-sheet';
+import { converToState, loadTodaySheet } from '../GoogleSheet';
 
 const LoginContain = styled.div`
   position: fixed;
