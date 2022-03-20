@@ -32,4 +32,4 @@ const LoadingIndicator = (_props: any) => {
     );
 }
 
-export default LoadingIndicator;
+export default React.memo(LoadingIndicator);
