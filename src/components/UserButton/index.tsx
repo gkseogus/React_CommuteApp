@@ -21,10 +21,9 @@ export declare const window: Window & {
   gapi: any;
 };
 
-/* 
-    
-*/
-function useCheckInOutData() {
+
+// 현재 로그인한 유저의 엑셀 row 정보가 담겨있음
+const useCheckInOutData = () => {
   const userId = window.sessionStorage.user_id;
   const data = useSelector((state: ApplicationState) => state.inventory.data);
 
@@ -51,8 +50,8 @@ function useCheckInOutData() {
 
 const UserButton = (_props: any) => {
   const checkInOut = useCheckInOutData();
-  // 버튼의 disable 활성화 상태 값
 
+  // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
 
@@ -62,7 +61,6 @@ const UserButton = (_props: any) => {
     const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
 
     console.log('출근시간', attendanceDate);
-    // console.log('sessionStorage',window.sessionStorage);
 
     // 로그인 사용자의 id를 조회해 팀 값을 결정
     let team = '';
@@ -75,6 +73,8 @@ const UserButton = (_props: any) => {
 
     try {
       // 기존 데이터가 있으면 해당 index에, 없으면 마지막 index에 추가
+      // 해당 유저의 row가 이미 있으면 그 row를 수정
+      // 그게 아니면 row index에 값을 새로 쓴다.
       const index = checkInOut.data?.index ?? checkInOut.lastIndex;
       await window.gapi.client.sheets.spreadsheets.values.batchUpdate({
         spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
@@ -83,8 +83,7 @@ const UserButton = (_props: any) => {
           {
             // 오늘 시트의 A index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
             range: `'${sheetId}'!A${index}:H${index}`,
-            values: [
-              [
+            values: [[
                 team,
                 userName,
                 attendanceDate,
@@ -93,8 +92,7 @@ const UserButton = (_props: any) => {
                 '근무미달',
                 '출근',
                 userId,
-              ],
-            ],
+              ]],
           },
         ],
       });
@@ -136,9 +134,15 @@ const UserButton = (_props: any) => {
         valueInputOption: 'USER_ENTERED',
         data: [
           {
-            // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
+            // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
             range: `'${sheetId}'!D${index}:H${index}`,
-            values: [[leaveDateFormat, time, workState, '퇴근', userId]],
+            values: [[
+              leaveDateFormat, 
+              time, 
+              workState, 
+              '퇴근', 
+              userId
+            ]],
           },
         ],
       });
