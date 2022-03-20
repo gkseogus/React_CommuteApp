@@ -25,11 +25,12 @@ export const loadTodaySheet = async () => {
   return await getSheet(todayKey);
 }
 
-// ggapi.client가 init되었는지 검사
+// ggapi.client가 init되었는지 검사 -> OAuth가 init 되기 전에 실행되면 에러남
 export const checkGapi = () => {
   return window.gapi.client != null;
 }
 
+// sheet를 조회
 export const getSheet = async (key: string) => {
   const res = await window.gapi.client.sheets.spreadsheets.get({
     spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
@@ -37,7 +38,7 @@ export const getSheet = async (key: string) => {
     // sheet 목록을 조회할 때 테이블 전체 데이터도 포함
     includeGridData: true,
   });
-  // title과 Key 가 매칭되는 시트 찾기 -> 이때 ket는 sheetKey 변수
+  // title과 Key 가 매칭되는 시트 찾기 -> 이때 ket는 sheetKey 변수 (오늘 날짜 데이터를 가져오기 위함)
   return res.result.sheets.find((sheet: any) => sheet.properties.title === key);
 }
 
