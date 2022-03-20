@@ -136,15 +136,18 @@ const HomePage = (_props: any) => {
   const [name, setName] = useState('');
   const [time, setTime] = useState<Moment>();
   const [targetData, setTargetData] = useState();
+
   useEffect(() => {
     // 스프레드 시트 api 가 로드되지 않았으면 Skip
     if (!checkGapi()) {
       return;
     }
+    // 시간 데이터가 없을 경우
     if (!time) {
       setTargetData(undefined);
       return;
     }
+
     // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
     const sheetKey = time.format('YYYY-MM-DD');
     getSheet(sheetKey).then((sheet) => {
@@ -155,6 +158,8 @@ const HomePage = (_props: any) => {
   const rootData = useSelector(
     (state: ApplicationState) => state.inventory.data
   );
+
+  // 유저 검색
   const data = (targetData ?? rootData).filter(
     (i) => !name || i.user.includes(name)
   );
@@ -165,7 +170,7 @@ const HomePage = (_props: any) => {
       <UserButton />
       <HomeDatePicker
         onChange={(moment: Moment) =>
-          // 시간이 선택되면 moment배열을 start,end프로퍼티로 담는다. 선택되지 않으면 undefined
+          // 시간이 선택되면 
           setTime(moment)
         }
       />
