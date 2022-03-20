@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ApplicationState } from '../../store';
 import { teamDate } from '../../teamData';
+import { trackPromise } from 'react-promise-tracker';
 
 const Container = styled.div`
   position: fixed;
@@ -76,7 +77,7 @@ const UserButton = (_props: any) => {
       // 해당 유저의 row가 이미 있으면 그 row를 수정
       // 그게 아니면 row index에 값을 새로 쓴다.
       const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-      await window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
         spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
         valueInputOption: 'USER_ENTERED',
         data: [
@@ -95,7 +96,8 @@ const UserButton = (_props: any) => {
               ]],
           },
         ],
-      });
+      })
+      );
       window.location.reload();
     } catch (err) {
       console.log('error:', err);
@@ -109,7 +111,6 @@ const UserButton = (_props: any) => {
 
     const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
     console.log('퇴근시간', leaveDateFormat);
-    // console.log('sessionStorage',window.sessionStorage);
 
     // 퇴근시간 - 출근시간
     const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
@@ -129,7 +130,7 @@ const UserButton = (_props: any) => {
     const sheetId = moment().format('YYYY-MM-DD');
     try {
       const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-      await window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
         spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
         valueInputOption: 'USER_ENTERED',
         data: [
@@ -145,7 +146,8 @@ const UserButton = (_props: any) => {
             ]],
           },
         ],
-      });
+      })
+      );
       window.location.reload();
     } catch (err) {
       console.log('error:', err);
