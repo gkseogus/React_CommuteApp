@@ -142,7 +142,7 @@ const HomePage = (_props: any) => {
     if (!checkGapi()) {
       return;
     }
-    // 시간 데이터가 없을 경우
+    // 날짜 데이터가 없을 경우
     if (!time) {
       setTargetData(undefined);
       return;
@@ -159,7 +159,8 @@ const HomePage = (_props: any) => {
     (state: ApplicationState) => state.inventory.data
   );
 
-  // 유저 검색
+  // 유저 검색, targetData = 시트를 보여주는 상태값, i = rootData
+  //  없는 유저 검색 시 시트 데이터를 안 보여줌
   const data = (targetData ?? rootData).filter(
     (i) => !name || i.user.includes(name)
   );
@@ -170,7 +171,7 @@ const HomePage = (_props: any) => {
       <UserButton />
       <HomeDatePicker
         onChange={(moment: Moment) =>
-          // 시간이 선택되면 
+          // 날짜가 선택되면 
           setTime(moment)
         }
       />
