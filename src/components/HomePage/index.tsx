@@ -159,7 +159,9 @@ const HomePage = (_props: any) => {
     (state: ApplicationState) => state.inventory.data
   );
 
-  // 유저 검색, targetData = 시트를 보여주는 상태값, i = rootData
+  // 유저 검색 및 데이터 출력
+  // targetData = 시트를 보여주는 상태값, i = rootData
+  // ㄴ 날짜 선택이 안 됐을 시 rootData를 보여주며 선택 됐을 시 targetData를 보여줌
   //  없는 유저 검색 시 시트 데이터를 안 보여줌
   const data = (targetData ?? rootData).filter(
     (i) => !name || i.user.includes(name)

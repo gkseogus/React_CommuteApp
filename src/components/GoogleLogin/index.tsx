@@ -57,7 +57,7 @@ export const AuthController = (_props: any) => {
       setIsSignedIn(isSignedIn);
 
       if (isSignedIn) {
-        // 로그인 성공시 스프레트 시트를 불러옴
+        // 로그인 성공시 스프레트 시트의 워크시트를 조회 및 생성
         trackPromise(
           loadTodaySheet().then((response: any) => {
             // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
