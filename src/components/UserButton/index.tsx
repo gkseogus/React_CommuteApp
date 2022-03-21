@@ -25,11 +25,11 @@ export declare const window: Window & {
 
 // 현재 로그인한 유저의 엑셀 row 정보가 담겨있음
 const useCheckInOutData = () => {
-  const userId = window.sessionStorage.user_id;
+  const userEmail = window.sessionStorage.user_email;
   const data = useSelector((state: ApplicationState) => state.inventory.data);
 
-  // 테이블 데이터중 key와 user_id 가 일치하는 항목을 탐색
-  const index = data.findIndex((row) => row.key === userId);
+  // 테이블 데이터중 key와 user_email 가 일치하는 항목을 탐색
+  const index = data.findIndex((row) => row.key === userEmail);
 
   // 해당 유저와 일치하는 항목이 없는 경우
   if (index < 0) {
@@ -61,7 +61,7 @@ const UserButton = (_props: any) => {
     if(checkInAlert){
       alert('출근');
 
-      const userId = window.sessionStorage.user_id;
+      const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
   
@@ -70,7 +70,7 @@ const UserButton = (_props: any) => {
       // 로그인 사용자의 id를 조회해 팀 값을 결정
       let team = '';
       for (let i = 0; i < teamDate.length; i++) {
-        if (teamDate[i].key === userId) {
+        if (teamDate[i].key === userEmail) {
           team = teamDate[i].team;
         }
       }
@@ -97,7 +97,7 @@ const UserButton = (_props: any) => {
                   '',
                   '근무미달',
                   '출근',
-                  userId,
+                  userEmail,
                 ]],
             },
           ],
@@ -117,7 +117,7 @@ const UserButton = (_props: any) => {
     const checkOutAlert = window.confirm('퇴근하시겠습니까?');
     if(checkOutAlert){
       alert('퇴근완료');
-      const userId = window.sessionStorage.user_id;
+      const userEmail = window.sessionStorage.user_email;
       // moment 연산을 위한 변수 재지정
       const leaveDate = moment(new Date());
   
@@ -155,7 +155,7 @@ const UserButton = (_props: any) => {
                 time, 
                 workState, 
                 '퇴근', 
-                userId
+                userEmail
               ]],
             },
           ],
