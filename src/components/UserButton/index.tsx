@@ -57,100 +57,117 @@ const UserButton = (_props: any) => {
   const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
 
   const btnDisable = async () => {
-    const userId = window.sessionStorage.user_id;
-    const userName = window.sessionStorage.user_name;
-    const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
+    const checkInAlert = window.confirm('출근하시겠습니까?');
+    if(checkInAlert){
+      alert('출근');
 
-    console.log('출근시간', attendanceDate);
+      const userId = window.sessionStorage.user_id;
+      const userName = window.sessionStorage.user_name;
+      const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
+  
+      console.log('출근시간', attendanceDate);
+  
+      // 로그인 사용자의 id를 조회해 팀 값을 결정
+      let team = '';
+      for (let i = 0; i < teamDate.length; i++) {
+        if (teamDate[i].key === userId) {
+          team = teamDate[i].team;
+        }
+      }
 
-    // 로그인 사용자의 id를 조회해 팀 값을 결정
-    let team = '';
-    for (let i = 0; i < teamDate.length; i++) {
-      if (teamDate[i].key === userId) {
-        team = teamDate[i].team;
+      const sheetId = moment().format('YYYY-MM-DD');
+      
+      try {
+        // 기존 데이터가 있으면 해당 index에, 없으면 마지막 index에 추가
+        // 해당 유저의 row가 이미 있으면 그 row를 수정
+        // 그게 아니면 row index에 값을 새로 쓴다.
+        const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+        await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+          spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+          valueInputOption: 'USER_ENTERED',
+          data: [
+            {
+              // 오늘 시트의 A index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+              range: `'${sheetId}'!A${index}:H${index}`,
+              values: [[
+                  team,
+                  userName,
+                  attendanceDate,
+                  '',
+                  '',
+                  '근무미달',
+                  '출근',
+                  userId,
+                ]],
+            },
+          ],
+        })
+        );
+        window.location.reload();
+      } catch (err) {
+        console.log('error:', err);
       }
     }
-    const sheetId = moment().format('YYYY-MM-DD');
-
-    try {
-      // 기존 데이터가 있으면 해당 index에, 없으면 마지막 index에 추가
-      // 해당 유저의 row가 이미 있으면 그 row를 수정
-      // 그게 아니면 row index에 값을 새로 쓴다.
-      const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-        valueInputOption: 'USER_ENTERED',
-        data: [
-          {
-            // 오늘 시트의 A index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-            range: `'${sheetId}'!A${index}:H${index}`,
-            values: [[
-                team,
-                userName,
-                attendanceDate,
-                '',
-                '',
-                '근무미달',
-                '출근',
-                userId,
-              ]],
-          },
-        ],
-      })
-      );
-      window.location.reload();
-    } catch (err) {
-      console.log('error:', err);
+    else{
+      alert('취소');
     }
   };
 
   const reverseDisable = async () => {
-    const userId = window.sessionStorage.user_id;
-    // moment 연산을 위한 변수 재지정
-    const leaveDate = moment(new Date());
-
-    const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-    console.log('퇴근시간', leaveDateFormat);
-
-    // 퇴근시간 - 출근시간
-    const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-      moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-    );
-    const momentDuration = moment.duration(subtractTime);
-    const time =
-      Math.floor(momentDuration.asHours()) +
-      ' 시간' +
-      moment.utc(subtractTime).format(' mm 분 ss 초');
-
-    // 시간으로만 근무상태를 판별하기 위한 변수
-    const workHours = Math.floor(momentDuration.asHours());
-    const workState =
-      workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-
-    const sheetId = moment().format('YYYY-MM-DD');
-    try {
-      const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-        valueInputOption: 'USER_ENTERED',
-        data: [
-          {
-            // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-            range: `'${sheetId}'!D${index}:H${index}`,
-            values: [[
-              leaveDateFormat, 
-              time, 
-              workState, 
-              '퇴근', 
-              userId
-            ]],
-          },
-        ],
-      })
+    const checkOutAlert = window.confirm('퇴근하시겠습니까?');
+    if(checkOutAlert){
+      alert('퇴근완료');
+      const userId = window.sessionStorage.user_id;
+      // moment 연산을 위한 변수 재지정
+      const leaveDate = moment(new Date());
+  
+      const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+      console.log('퇴근시간', leaveDateFormat);
+  
+      // 퇴근시간 - 출근시간
+      const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+        moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
       );
-      window.location.reload();
-    } catch (err) {
-      console.log('error:', err);
+      const momentDuration = moment.duration(subtractTime);
+      const time =
+        Math.floor(momentDuration.asHours()) +
+        ' 시간' +
+        moment.utc(subtractTime).format(' mm 분 ss 초');
+  
+      // 시간으로만 근무상태를 판별하기 위한 변수
+      const workHours = Math.floor(momentDuration.asHours());
+      const workState =
+        workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+  
+      const sheetId = moment().format('YYYY-MM-DD');
+
+      try {
+        const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+        await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+          spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+          valueInputOption: 'USER_ENTERED',
+          data: [
+            {
+              // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+              range: `'${sheetId}'!D${index}:H${index}`,
+              values: [[
+                leaveDateFormat, 
+                time, 
+                workState, 
+                '퇴근', 
+                userId
+              ]],
+            },
+          ],
+        })
+        );
+        window.location.reload();
+      } catch (err) {
+        console.log('error:', err);
+      }
+    }
+    else{
+      alert('취소');
     }
   };
 
