@@ -51,14 +51,13 @@ export const converToState = (sheet: any) => {
   // formattedValue는 엑셀 api가 뱉어주는 데이터 타입
   // cell에 들어있는 값을 담고있는 프로퍼티다.
   return data.map((row: { values: { formattedValue: string }[] }) => ({
-    key: row.values[7]?.formattedValue,
+    key: row.values[6]?.formattedValue,
     team: row.values[0]?.formattedValue,
     user: row.values[1]?.formattedValue,
     checkIn: row.values[2]?.formattedValue,
     checkOut: row.values[3]?.formattedValue,
     workTime: row.values[4]?.formattedValue,
     workState: row.values[5]?.formattedValue,
-    working: row.values[6]?.formattedValue,
-    homeWork: row.values[8]?.formattedValue
+    homeWork: row.values[7]?.formattedValue
   }));
 }

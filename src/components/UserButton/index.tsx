@@ -94,7 +94,7 @@ const UserButton = (_props: any) => {
           data: [
             {
               // 오늘 시트의 A index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-              range: `'${sheetId}'!A${index}:I${index}`,
+              range: `'${sheetId}'!A${index}:H${index}`,
               values: [[
                   team,
                   userName,
@@ -102,7 +102,6 @@ const UserButton = (_props: any) => {
                   '',
                   '',
                   '근무미달',
-                  '출근',
                   userEmail,
                   '재택'
                 ]],
@@ -155,13 +154,12 @@ const UserButton = (_props: any) => {
           valueInputOption: 'USER_ENTERED',
           data: [
             {
-              // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-              range: `'${sheetId}'!D${index}:H${index}`,
+              // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
+              range: `'${sheetId}'!D${index}:G${index}`,
               values: [[
                 leaveDateFormat, 
                 time, 
                 workState, 
-                '퇴근',
                 userEmail
               ]],
             },
@@ -188,7 +186,7 @@ const UserButton = (_props: any) => {
         valueInputOption: 'USER_ENTERED',
         data: [
           {
-            range: `'${sheetId}'!I${index}`,
+            range: `'${sheetId}'!H${index}`,
             values: [[
               '회사'
             ]],
