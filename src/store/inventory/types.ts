@@ -6,6 +6,7 @@ export interface Inventory {
   workTime: string;
   workState: string;
   working: string;
+  homeWork: string;
   key: number;
 };
 
