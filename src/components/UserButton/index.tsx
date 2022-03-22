@@ -60,7 +60,7 @@ const UserButton = (_props: any) => {
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
-  const companyWorkButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckOut;
+  const companyWorkButtonDisaled = !window.sessionStorage.user_id || !checkInOut.isCheckIn || checkInOut.isCheckOut;;
 
   const btnDisable = async () => {
     const checkInAlert = window.confirm('출근하시겠습니까?');
