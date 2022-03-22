@@ -10,12 +10,17 @@ import { trackPromise } from 'react-promise-tracker';
 
 const Container = styled.div`
   position: fixed;
-  right: 80px;
+  right: 250px;
 `;
 
 const Container2 = styled.div`
   position: fixed;
-  right: 10px;
+  right: 180px;
+`;
+
+const Container3 = styled.div`
+  position: fixed;
+  right: 80px;
 `;
 
 export declare const window: Window & {
@@ -55,6 +60,7 @@ const UserButton = (_props: any) => {
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
+  const companyWorkButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckOut;
 
   const btnDisable = async () => {
     const checkInAlert = window.confirm('출근하시겠습니까?');
@@ -64,7 +70,7 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-  
+
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -88,7 +94,7 @@ const UserButton = (_props: any) => {
           data: [
             {
               // 오늘 시트의 A index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-              range: `'${sheetId}'!A${index}:H${index}`,
+              range: `'${sheetId}'!A${index}:I${index}`,
               values: [[
                   team,
                   userName,
@@ -98,6 +104,7 @@ const UserButton = (_props: any) => {
                   '근무미달',
                   '출근',
                   userEmail,
+                  '재택'
                 ]],
             },
           ],
@@ -154,7 +161,7 @@ const UserButton = (_props: any) => {
                 leaveDateFormat, 
                 time, 
                 workState, 
-                '퇴근', 
+                '퇴근',
                 userEmail
               ]],
             },
@@ -168,6 +175,30 @@ const UserButton = (_props: any) => {
     }
     else{
       alert('취소');
+    }
+  };
+
+  const companyWork = async () => {
+    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+    const sheetId = moment().format('YYYY-MM-DD');
+    
+    try {
+      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+        spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+        valueInputOption: 'USER_ENTERED',
+        data: [
+          {
+            range: `'${sheetId}'!I${index}`,
+            values: [[
+              '회사'
+            ]],
+          },
+        ],
+      })
+      );
+      window.location.reload();
+    } catch (err) {
+      console.log('error:', err);
     }
   };
 
@@ -191,6 +222,15 @@ const UserButton = (_props: any) => {
           퇴근
         </Button>
       </Container2>
+      <Container3>
+        <Button 
+          type="primary"
+          disabled={companyWorkButtonDisaled}
+          onClick={companyWork}
+        >
+          회사
+        </Button>
+      </Container3>
     </div>
   );
 };
