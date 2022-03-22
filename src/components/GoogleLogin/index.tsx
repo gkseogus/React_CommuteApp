@@ -8,11 +8,11 @@ import { converToState, loadTodaySheet } from '../GoogleSheet';
 
 const LoginContain = styled.div`
   position: fixed;
-  right: 150px;
+  right: 330px;
 `;
 const LoginUser = styled.div`
   position: fixed;
-  right: 300px;
+  right: 450px;
   padding: 5px;
   font-size: 20px;
   font-weight: bold;
