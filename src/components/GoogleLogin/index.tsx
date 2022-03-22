@@ -74,7 +74,7 @@ export const AuthController = (_props: any) => {
 
   // AuthController 컴포넌트가 처음 렌더링 될 때 (마운트 될 때) 호출됨.
   useEffect(() => {
-    // 구글 auth 모듈 초기 내용 설정
+    // 구글 OAuth 모듈 초기 내용 설정
     window.gapi.load('client:auth2', async () => {
       try {
         await window.gapi.client.init({
@@ -85,7 +85,7 @@ export const AuthController = (_props: any) => {
         });
 
         // 로그인 상태 변경을 위한 listen(연결 요청 대기 메소드)
-        // getAuthInstance로 GoogleAuth를 불러온다.
+        // getOAuthInstance로 GoogleOAuth를 불러온다.
         window.gapi.auth2
           .getAuthInstance()
           .isSignedIn.listen(updateSigninStatus);
