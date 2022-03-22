@@ -142,7 +142,7 @@ const UserButton = (_props: any) => {
       const workState =
         workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
   
-      // 만약 일수가 차이나면 
+      // 일수 차이를 계산하기 위해 두 시간의 차이에서 day만 가져옴
       const workDay = Math.floor(momentDuration.asDays());
 
       if(workDay >= 1) {
