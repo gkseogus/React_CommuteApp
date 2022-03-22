@@ -111,20 +111,20 @@ const columns: any = [
       record.workState.indexOf(value) === 0,
   },
   {
-    title: '출근 여부',
-    dataIndex: 'working',
+    title: '재택 여부',
+    dataIndex: 'homeWork',
     filters: [
       {
-        text: '출근',
-        value: '출근',
+        text: '회사',
+        value: '회사',
       },
       {
-        text: '퇴근',
-        value: '퇴근',
+        text: '재택',
+        value: '재택',
       },
     ],
-    onFilter: (value: any, record: { working: string | any[] }) =>
-      record.working.indexOf(value) === 0,
+    onFilter: (value: any, record: { homeWork: string | any[] }) =>
+      record.homeWork.indexOf(value) === 0,
   },
 ];
 
