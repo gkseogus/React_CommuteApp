@@ -7,4 +7,8 @@ export const teamDate = [
     key: 'fbznffldj2@gmail.com',
     team: 'CM',
   },
+  {
+    key: 'sohyeon.oh@hnine.com',
+    team: 'R&D',
+  },
 ];
