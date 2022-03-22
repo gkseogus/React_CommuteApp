@@ -60,7 +60,7 @@ const UserButton = (_props: any) => {
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
-  const companyWorkButtonDisaled = !window.sessionStorage.user_id || !checkInOut.isCheckIn || checkInOut.isCheckOut;;
+  const companyWorkButtonDisaled = !window.sessionStorage.user_id || !checkInOut.isCheckIn || checkInOut.isCheckOut;
 
   const btnDisable = async () => {
     const checkInAlert = window.confirm('출근하시겠습니까?');
@@ -135,40 +135,67 @@ const UserButton = (_props: any) => {
         moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
       );
       const momentDuration = moment.duration(subtractTime);
-      const time =
-        Math.floor(momentDuration.asHours()) +
-        ' 시간' +
-        moment.utc(subtractTime).format(' mm 분 ss 초');
+      const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
   
       // 시간으로만 근무상태를 판별하기 위한 변수
       const workHours = Math.floor(momentDuration.asHours());
       const workState =
         workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
   
-      const sheetId = moment().format('YYYY-MM-DD');
+      // 만약 일수가 차이나면 
+      const workDay = Math.floor(momentDuration.asDays());
 
-      try {
-        const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-        await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-          spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-          valueInputOption: 'USER_ENTERED',
-          data: [
-            {
-              // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
-              range: `'${sheetId}'!D${index}:G${index}`,
-              values: [[
-                leaveDateFormat, 
-                time, 
-                workState, 
-                userEmail
-              ]],
-            },
-          ],
-        })
-        );
-        window.location.reload();
-      } catch (err) {
-        console.log('error:', err);
+      if(workDay >= 1) {
+        const sheetId = moment().format('YYYY-MM-DD');
+        try {
+          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+            valueInputOption: 'USER_ENTERED',
+            data: [
+              {
+                // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
+                range: `'${sheetId}'!D${index}:G${index}`,
+                values: [[
+                  '다음날에 퇴근', 
+                  time, 
+                  workState, 
+                  userEmail
+                ]],
+              },
+            ],
+          })
+          );
+          window.location.reload();
+        } catch (err) {
+          console.log('error:', err);
+        }
+      }
+      else {
+        const sheetId = moment().format('YYYY-MM-DD');
+        try {
+          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+            valueInputOption: 'USER_ENTERED',
+            data: [
+              {
+                // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
+                range: `'${sheetId}'!D${index}:G${index}`,
+                values: [[
+                  leaveDateFormat, 
+                  time, 
+                  workState, 
+                  userEmail
+                ]],
+              },
+            ],
+          })
+          );
+          window.location.reload();
+        } catch (err) {
+          console.log('error:', err);
+        }
       }
     }
     else{
