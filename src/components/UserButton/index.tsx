@@ -128,6 +128,8 @@ const UserButton = (_props: any) => {
       const leaveDate = moment(new Date());
   
       const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+      // 하루 차이를 두고 출 퇴근 버튼을 눌렀을 시의 테스트를 하기 위한 코드
+      // const leaveDateFormat = leaveDate.add(1, 'days').format('YYYY MM월 DD일, HH:mm:ss');
       console.log('퇴근시간', leaveDateFormat);
   
       // 퇴근시간 - 출근시간
@@ -141,37 +143,7 @@ const UserButton = (_props: any) => {
       const workHours = Math.floor(momentDuration.asHours());
       const workState =
         workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-  
-      // 일수 차이를 계산하기 위해 두 시간의 차이에서 day만 가져옴
-      const workDay = Math.floor(momentDuration.asDays());
 
-      if(workDay >= 1) {
-        const sheetId = moment().format('YYYY-MM-DD');
-        try {
-          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-            valueInputOption: 'USER_ENTERED',
-            data: [
-              {
-                // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
-                range: `'${sheetId}'!D${index}:G${index}`,
-                values: [[
-                  '다음날에 퇴근', 
-                  time, 
-                  workState, 
-                  userEmail
-                ]],
-              },
-            ],
-          })
-          );
-          window.location.reload();
-        } catch (err) {
-          console.log('error:', err);
-        }
-      }
-      else {
         const sheetId = moment().format('YYYY-MM-DD');
         try {
           const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -192,11 +164,10 @@ const UserButton = (_props: any) => {
             ],
           })
           );
-          window.location.reload();
+          // window.location.reload();
         } catch (err) {
           console.log('error:', err);
         }
-      }
     }
     else{
       alert('취소');
