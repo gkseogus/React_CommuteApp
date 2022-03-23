@@ -59,13 +59,13 @@ const UserButton = (_props: any) => {
 
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
-  const checkOutButtonDisabled = !checkInOut.isCheckIn || checkInOut.isCheckOut;
-  const companyWorkButtonDisaled = !window.sessionStorage.user_id || !checkInOut.isCheckIn || checkInOut.isCheckOut;
+  const checkOutButtonDisabled = !checkInOut.isCheckIn
+  const companyWorkButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
 
   const btnDisable = async () => {
-    const checkInAlert = window.confirm('출근하시겠습니까?');
+    const checkInAlert = window.confirm('재택 출근하시겠습니까?');
     if(checkInAlert){
-      alert('출근');
+      alert('재택출근');
 
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
@@ -119,10 +119,63 @@ const UserButton = (_props: any) => {
     }
   };
 
+  const companyWork = async () => {
+    const checkInAlert = window.confirm('회사 출근하시겠습니까?');
+    if(checkInAlert){
+      alert('회사출근');
+
+      const userEmail = window.sessionStorage.user_email;
+      const userName = window.sessionStorage.user_name;
+      const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
+
+      console.log('출근시간', attendanceDate);
+  
+      // 로그인 사용자의 id를 조회해 팀 값을 결정
+      let team = '';
+      for (let i = 0; i < teamDate.length; i++) {
+        if (teamDate[i].key === userEmail) {
+          team = teamDate[i].team;
+        }
+      }
+
+      const sheetId = moment().format('YYYY-MM-DD');
+
+      try {
+        const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+        await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+          spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+          valueInputOption: 'USER_ENTERED',
+          data: [
+            {
+              range: `'${sheetId}'!A${index}:H${index}`,
+              values: [[
+                  team,
+                  userName,
+                  attendanceDate,
+                  '',
+                  '',
+                  '근무미달',
+                  userEmail,
+                  '회사'
+                ]],
+            },
+          ],
+        })
+        );
+        window.location.reload();
+      } catch (err) {
+        console.log('error:', err);
+      }
+    }
+    else{
+      alert('취소');
+    }
+  };
+
   const reverseDisable = async () => {
-    const checkOutAlert = window.confirm('퇴근하시겠습니까?');
+    const checkOutAlert = window.confirm('퇴근하시겠습니까? (재택:확인, 회사:취소)')
     if(checkOutAlert){
-      alert('퇴근완료');
+      alert('재택 퇴근완료');
       const userEmail = window.sessionStorage.user_email;
       // moment 연산을 위한 변수 재지정
       const leaveDate = moment(new Date());
@@ -145,6 +198,7 @@ const UserButton = (_props: any) => {
         workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
 
         const sheetId = moment().format('YYYY-MM-DD');
+        // 퇴근버튼을 누르면 사용자에게 회사인지 재택인지 한번 더 확인하는 모달창
         try {
           const index = checkInOut.data?.index ?? checkInOut.lastIndex;
           await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
@@ -152,49 +206,68 @@ const UserButton = (_props: any) => {
             valueInputOption: 'USER_ENTERED',
             data: [
               {
-                // 오늘 시트의 D index 번째 컬럼부터 G index 번째 컬럼까지 데이터를 채움
-                range: `'${sheetId}'!D${index}:G${index}`,
+                // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+                range: `'${sheetId}'!D${index}:H${index}`,
                 values: [[
                   leaveDateFormat, 
                   time, 
                   workState, 
-                  userEmail
+                  userEmail,
+                  '재택'
                 ]],
               },
             ],
           })
           );
-          // window.location.reload();
+          window.location.reload();
         } catch (err) {
           console.log('error:', err);
         }
-    }
+      }
     else{
-      alert('취소');
-    }
-  };
-
-  const companyWork = async () => {
-    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-    const sheetId = moment().format('YYYY-MM-DD');
-    
-    try {
-      await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-        spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-        valueInputOption: 'USER_ENTERED',
-        data: [
-          {
-            range: `'${sheetId}'!H${index}`,
-            values: [[
-              '회사'
-            ]],
-          },
-        ],
-      })
+      alert('회사 퇴근완료');
+      const userEmail = window.sessionStorage.user_email;
+      const leaveDate = moment(new Date());
+  
+      const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+      console.log('퇴근시간', leaveDateFormat);
+  
+      // 퇴근시간 - 출근시간
+      const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+        moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
       );
-      window.location.reload();
-    } catch (err) {
-      console.log('error:', err);
+      const momentDuration = moment.duration(subtractTime);
+      const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+  
+      // 시간으로만 근무상태를 판별하기 위한 변수
+      const workHours = Math.floor(momentDuration.asHours());
+      const workState =
+        workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+
+        const sheetId = moment().format('YYYY-MM-DD');
+        try {
+          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+            valueInputOption: 'USER_ENTERED',
+            data: [
+              {
+                range: `'${sheetId}'!D${index}:H${index}`,
+                values: [[
+                  leaveDateFormat, 
+                  time, 
+                  workState, 
+                  userEmail,
+                  '회사'
+                ]],
+              },
+            ],
+          })
+          );
+          window.location.reload();
+        } catch (err) {
+          console.log('error:', err);
+        }
     }
   };
 
