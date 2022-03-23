@@ -28,7 +28,7 @@ const LoginPage = (res: any) => {
     console.log('user name:', res.Ju.sf);
     console.log('user email:', res.Ju.zv);
     if(window.sessionStorage.user_id !== null || undefined){
-      history.push('/hnine');
+      history.push('/commute');
     }
     window.location.reload();
   };

@@ -17,7 +17,7 @@ const Routes: React.SFC = () => (
     />
     {/* 두 번째 route */}
     <Route exact
-      path="/hnine"
+      path="/commute"
       render={() => 
         <div>
           <GoogleLogOut/>
