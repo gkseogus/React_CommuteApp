@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import GoogleLogin from './components/GoogleLogin/index';
+import GoogleLogOut from './components/GoogleLogOut/index';
 import HomePage from './components/HomePage';
+import GoogleLoginPage from './components/GoogleLoginPage';
 
 const Routes: React.SFC = () => (
   <div>
@@ -10,10 +11,19 @@ const Routes: React.SFC = () => (
       path="/" 
       render={() => 
         <div>
-        <GoogleLogin/>
-        <HomePage />
+        <GoogleLoginPage/>
         </div>
       } 
+    />
+    {/* 두 번째 route */}
+    <Route exact
+      path="/hnine"
+      render={() => 
+        <div>
+          <GoogleLogOut/>
+          <HomePage/>
+        </div>
+      }
     />
   </div>
 );
