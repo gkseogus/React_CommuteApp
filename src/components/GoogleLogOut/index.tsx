@@ -1,6 +1,5 @@
 import React from 'react';
-import { useCallback } from 'react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { trackPromise } from 'react-promise-tracker';
 import { useDispatch } from 'react-redux';
@@ -44,7 +43,6 @@ var DISCOVERY_DOCS = [
 var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
 export const AuthController = (_props: any) => {
-
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -66,6 +64,7 @@ export const AuthController = (_props: any) => {
     },
     [dispatch]
   );
+
   useEffect(() => {
         // 구글 OAuth 모듈 초기 내용 설정
         window.gapi.load('client:auth2', async () => {
@@ -73,7 +72,7 @@ export const AuthController = (_props: any) => {
             await window.gapi.client.init({
               apiKey: API_KEY,
               clientId: CLIENT_ID,
-              discoveryDocs: DISCOVERY_DOCS, // API의 검색 문서는 API의 표면, API에 액세스하는 방법, API 요청 및 응답이 구조화되는 방법을 설명
+              discoveryDocs: DISCOVERY_DOCS, 
               scope: SCOPES,
             });
     
@@ -91,17 +90,17 @@ export const AuthController = (_props: any) => {
             alert(error);
           }
         });
-    if(window.sessionStorage.user_id === null || undefined){
-      history.push('/');
-    }
-  }, [history, updateSigninStatus]) 
+  }, [updateSigninStatus]) 
   
   // 로그아웃 버튼 클릭 시 sessionStorage의 모든 데이터 삭제
   const handleSignoutClick = () => {
-    history.push('/');
     window.gapi.auth2.getAuthInstance().signOut();
     window.sessionStorage.clear();
     window.localStorage.clear();
+    // 로그인 값이 존재하지 않을 경우 로그인 창으로 이동
+    if(window.sessionStorage.length === 0){
+      history.push('/');
+    }
     window.location.reload();
   };
 
