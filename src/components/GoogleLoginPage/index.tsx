@@ -43,7 +43,7 @@ const LoginPage = (res: any) => {
           clientId={CLIENT_ID}
           onSuccess={handleAuthClick}
           onFailure={responseFail}
-          render={renderProps => (<div></div>)}
+          render={_renderProps => (<div></div>)}
           autoLoad={true}
         ></GoogleLogin>
       </div>
