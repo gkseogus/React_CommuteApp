@@ -3,7 +3,6 @@ import { useCallback, useEffect } from 'react';
 import { GoogleLogout } from 'react-google-login';
 import { trackPromise } from 'react-promise-tracker';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchRequest } from '../../store/inventory/action';
 import { converToState, loadTodaySheet } from '../GoogleSheet';
