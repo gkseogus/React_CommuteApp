@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { ApplicationState } from '../../store';
 import HomeDatePicker from '../DatePicker';
 import { checkGapi, converToState, getSheet } from '../GoogleSheet';
@@ -136,8 +137,13 @@ const HomePage = (_props: any) => {
   const [name, setName] = useState('');
   const [time, setTime] = useState<Moment>();
   const [targetData, setTargetData] = useState();
+  const history = useHistory();
 
   useEffect(() => {
+    if(window.sessionStorage.length === 0){
+      history.push('/login');
+    }
+    
     // 스프레드 시트 api 가 로드되지 않았으면 Skip
     if (!checkGapi()) {
       return;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
@@ -16,6 +16,12 @@ const LoginPage = (res: any) => {
 
   const history = useHistory();
 
+  useEffect(() => {
+    if(window.sessionStorage.length !== 0){
+      history.push('/');
+    }
+  })
+
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = async (res: any) => {
     window.gapi.auth2.getAuthInstance().signIn();
@@ -27,9 +33,6 @@ const LoginPage = (res: any) => {
     console.log('login state:', window.sessionStorage);
     console.log('user name:', res.Ju.sf);
     console.log('user email:', res.Ju.zv);
-    if(window.sessionStorage.user_id !== null || undefined){
-      history.push('/commute');
-    }
     window.location.reload();
   };
 

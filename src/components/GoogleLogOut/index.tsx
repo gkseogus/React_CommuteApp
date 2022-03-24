@@ -43,7 +43,6 @@ var DISCOVERY_DOCS = [
 var SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
 
 export const AuthController = (_props: any) => {
-  const history = useHistory();
   const dispatch = useDispatch();
 
   // 구글 로그인 상태가 변경되었을 때 호출되는 함수
@@ -97,10 +96,6 @@ export const AuthController = (_props: any) => {
     window.gapi.auth2.getAuthInstance().signOut();
     window.sessionStorage.clear();
     window.localStorage.clear();
-    // 로그인 값이 존재하지 않을 경우 로그인 창으로 이동
-    if(window.sessionStorage.length === 0){
-      history.push('/');
-    }
     window.location.reload();
   };
 
