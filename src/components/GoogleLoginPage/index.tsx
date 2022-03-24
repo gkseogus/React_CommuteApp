@@ -1,12 +1,6 @@
 import React, { useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
-import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-
-const LoginContain = styled.div`
-  position: fixed;
-  right: 330px;
-`;
 
 // 개발자 콘솔에서 불러올 클라이언트 ID 및 API 키
 var CLIENT_ID =
@@ -21,10 +15,11 @@ const LoginPage = (res: any) => {
       history.push('/');
     }
   })
-
+  
   // 버튼 클릭 시 로그인한 사용자 정보를 출력
   const handleAuthClick = async (res: any) => {
-    window.gapi.auth2.getAuthInstance().signIn();
+    // window.gapi.auth2.getAuthInstance().signIn();
+    console.error('Login', res);
     window.sessionStorage.setItem('user_id', res.googleId);
     window.sessionStorage.setItem('user_email', res.Ju.zv);
     window.sessionStorage.setItem('user_name', res.Ju.sf);
@@ -43,16 +38,16 @@ const LoginPage = (res: any) => {
 
     
     return (
-        <div>
-            <LoginContain>
-                <GoogleLogin
-                    clientId={CLIENT_ID}
-                    buttonText="Sign In"
-                    onSuccess={handleAuthClick}
-                    onFailure={responseFail}
-                ></GoogleLogin>
-        </LoginContain> 
-        </div>
+      <div>
+        <GoogleLogin
+          clientId={CLIENT_ID}
+          onSuccess={handleAuthClick}
+          onFailure={responseFail}
+          // uxMode='redirect'
+          accessType="offline"
+          // redirectUri='localhost:3000'
+        ></GoogleLogin>
+      </div>
     );
 };
 
