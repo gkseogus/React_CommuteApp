@@ -13,7 +13,7 @@ const UserSearch = (_props: any) => {
 
   return (
     <ButtonContainer key={'US'}>
-      {/* <Space size={size}>
+      <Space size={size}>
         <Search
           placeholder='이름'
           onSearch={_props.onSearch}
@@ -35,7 +35,7 @@ const UserSearch = (_props: any) => {
             position: 'fixed'
           }}
         />
-      </Space> */}
+      </Space>
     </ButtonContainer>
   );
 };
