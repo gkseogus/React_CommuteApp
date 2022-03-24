@@ -43,9 +43,8 @@ const LoginPage = (res: any) => {
           clientId={CLIENT_ID}
           onSuccess={handleAuthClick}
           onFailure={responseFail}
-          // uxMode='redirect'
-          accessType="offline"
-          // redirectUri='localhost:3000'
+          render={renderProps => (<div></div>)}
+          autoLoad={true}
         ></GoogleLogin>
       </div>
     );
