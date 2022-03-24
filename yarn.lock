@@ -10854,6 +10854,14 @@ react-gapi@^1.0.1:
   dependencies:
     react-weblibrary "^1.0.1"
 
+react-google-authorize@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-google-authorize/-/react-google-authorize-1.0.4.tgz#c5044a32f7fcb22095cf4b77b791c9f17ac75c0d"
+  integrity sha512-hBrc9uPupZAn/sn1R2NK79aV6SnzCSPSKP+qLPTkGPHQO6cX265NV7FA7CNydKT570cGeHTOfgm+GJZfe0LlNw==
+  dependencies:
+    "@types/react" "*"
+    prop-types "^15.6.0"
+
 react-google-login@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/react-google-login/-/react-google-login-5.2.2.tgz#a20b46440c6c1610175ef75baf427118ff0e9859"
