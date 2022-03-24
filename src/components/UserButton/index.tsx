@@ -7,6 +7,9 @@ import styled from 'styled-components';
 import { ApplicationState } from '../../store';
 import { teamDate } from '../../teamData';
 import { trackPromise } from 'react-promise-tracker';
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css"; 
+
 
 const Container = styled.div`
   position: fixed;
@@ -173,101 +176,216 @@ const UserButton = (_props: any) => {
   };
 
   const reverseDisable = async () => {
-    const checkOutAlert = window.confirm('퇴근하시겠습니까? (재택:확인, 회사:취소)')
-    if(checkOutAlert){
-      alert('재택 퇴근완료');
-      const userEmail = window.sessionStorage.user_email;
-      // moment 연산을 위한 변수 재지정
-      const leaveDate = moment(new Date());
+    if(checkInOut.data?.homeWork === '재택'){
+      confirmAlert({
+        title: `현재 당신은 재택 퇴근입니다.`,
+        message: '변경하시려면 회사 버튼을 눌러주세요',
+        buttons:[
+          {
+            label: '회사',
+            onClick: async () => {
+              window.localStorage.setItem('user_workState', '회사');
+              const userEmail = window.sessionStorage.user_email;
+              // moment 연산을 위한 변수 재지정
+              const leaveDate = moment(new Date());
+          
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              // 하루 차이를 두고 출 퇴근 버튼을 눌렀을 시의 테스트를 하기 위한 코드
+              // const leaveDateFormat = leaveDate.add(1, 'days').format('YYYY MM월 DD일, HH:mm:ss');
+              console.log('퇴근시간', leaveDateFormat);
+          
+              // 퇴근시간 - 출근시간
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
+              );
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+          
+              // 시간으로만 근무상태를 판별하기 위한 변수
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState =
+                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+        
+                const sheetId = moment().format('YYYY-MM-DD');
+                // 퇴근버튼을 누르면 사용자에게 회사인지 재택인지 한번 더 확인하는 모달창
+                try {
+                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                    valueInputOption: 'USER_ENTERED',
+                    data: [
+                      {
+                        // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+                        range: `'${sheetId}'!D${index}:H${index}`,
+                        values: [[
+                          leaveDateFormat, 
+                          time, 
+                          workState, 
+                          userEmail,
+                          '회사'
+                        ]],
+                      },
+                    ],
+                  })
+                  );
+                  window.location.reload();
+                } catch (err) {
+                  console.log('error:', err);
+                }
+            }
+          },        
+          {
+            label: '변경안함',
+            onClick: async () => {
+              window.localStorage.setItem('user_workState', '재택');
+              const userEmail = window.sessionStorage.user_email;
   
-      const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-      // 하루 차이를 두고 출 퇴근 버튼을 눌렀을 시의 테스트를 하기 위한 코드
-      // const leaveDateFormat = leaveDate.add(1, 'days').format('YYYY MM월 DD일, HH:mm:ss');
-      console.log('퇴근시간', leaveDateFormat);
+              const leaveDate = moment(new Date());
+          
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              console.log('퇴근시간', leaveDateFormat);
+          
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
+              );
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+          
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState =
+                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+        
+                const sheetId = moment().format('YYYY-MM-DD');
+                try {
+                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                    valueInputOption: 'USER_ENTERED',
+                    data: [
+                      {
   
-      // 퇴근시간 - 출근시간
-      const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-        moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-      );
-      const momentDuration = moment.duration(subtractTime);
-      const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-  
-      // 시간으로만 근무상태를 판별하기 위한 변수
-      const workHours = Math.floor(momentDuration.asHours());
-      const workState =
-        workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+                        range: `'${sheetId}'!D${index}:H${index}`,
+                        values: [[
+                          leaveDateFormat, 
+                          time, 
+                          workState, 
+                          userEmail,
+                          '재택'
+                        ]],
+                      },
+                    ],
+                  })
+                  );
+                  window.location.reload();
+                } catch (err) {
+                  console.log('error:', err);
+                }
+            }
+          }
+        ]
+      })
+    }
+    else if(checkInOut.data?.homeWork === '회사'){
+      confirmAlert({
+        title: `현재 당신은 회사 퇴근입니다.`,
+        message: '변경하시려면 재택 버튼을 눌러주세요',
+        buttons:[
+          {
+            label: '재택',
+            onClick: async () => {
+              window.localStorage.setItem('user_workState', '재택');
+              const userEmail = window.sessionStorage.user_email;
+              const leaveDate = moment(new Date());
+          
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              console.log('퇴근시간', leaveDateFormat);
+          
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
+              );
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
 
-        const sheetId = moment().format('YYYY-MM-DD');
-        // 퇴근버튼을 누르면 사용자에게 회사인지 재택인지 한번 더 확인하는 모달창
-        try {
-          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-            valueInputOption: 'USER_ENTERED',
-            data: [
-              {
-                // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-                range: `'${sheetId}'!D${index}:H${index}`,
-                values: [[
-                  leaveDateFormat, 
-                  time, 
-                  workState, 
-                  userEmail,
-                  '재택'
-                ]],
-              },
-            ],
-          })
-          );
-          window.location.reload();
-        } catch (err) {
-          console.log('error:', err);
-        }
-      }
-    else{
-      alert('회사 퇴근완료');
-      const userEmail = window.sessionStorage.user_email;
-      const leaveDate = moment(new Date());
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState =
+                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+        
+                const sheetId = moment().format('YYYY-MM-DD');
+                try {
+                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                    valueInputOption: 'USER_ENTERED',
+                    data: [
+                      {
+                        range: `'${sheetId}'!D${index}:H${index}`,
+                        values: [[
+                          leaveDateFormat, 
+                          time, 
+                          workState, 
+                          userEmail,
+                          '재택'
+                        ]],
+                      },
+                    ],
+                  })
+                  );
+                  window.location.reload();
+                } catch (err) {
+                  console.log('error:', err);
+                }
+            }
+          },        
+          {
+            label: '변경안함',
+            onClick: async () => {
+              window.localStorage.setItem('user_workState', '회사');
+              const userEmail = window.sessionStorage.user_email;
   
-      const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-      console.log('퇴근시간', leaveDateFormat);
+              const leaveDate = moment(new Date());
+          
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              console.log('퇴근시간', leaveDateFormat);
+          
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
+                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
+              );
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+          
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState =
+                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+        
+                const sheetId = moment().format('YYYY-MM-DD');
+                try {
+                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                    valueInputOption: 'USER_ENTERED',
+                    data: [
+                      {
   
-      // 퇴근시간 - 출근시간
-      const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-        moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-      );
-      const momentDuration = moment.duration(subtractTime);
-      const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-  
-      // 시간으로만 근무상태를 판별하기 위한 변수
-      const workHours = Math.floor(momentDuration.asHours());
-      const workState =
-        workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-
-        const sheetId = moment().format('YYYY-MM-DD');
-        try {
-          const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-          await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-            spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-            valueInputOption: 'USER_ENTERED',
-            data: [
-              {
-                range: `'${sheetId}'!D${index}:H${index}`,
-                values: [[
-                  leaveDateFormat, 
-                  time, 
-                  workState, 
-                  userEmail,
-                  '회사'
-                ]],
-              },
-            ],
-          })
-          );
-          window.location.reload();
-        } catch (err) {
-          console.log('error:', err);
-        }
+                        range: `'${sheetId}'!D${index}:H${index}`,
+                        values: [[
+                          leaveDateFormat, 
+                          time, 
+                          workState, 
+                          userEmail,
+                          '회사'
+                        ]],
+                      },
+                    ],
+                  })
+                  );
+                  window.location.reload();
+                } catch (err) {
+                  console.log('error:', err);
+                }
+            }
+          }
+        ]
+      })
     }
   };
 
