@@ -8,20 +8,20 @@ const Routes: React.SFC = () => (
   <div>
     {/* 첫 번째 route */}
     <Route exact 
-      path="/" 
+      path='/'
       render={() => 
         <div>
-        <GoogleLoginPage/>
+          <GoogleLogOut/>
+          <HomePage/>
         </div>
       } 
     />
     {/* 두 번째 route */}
     <Route exact
-      path="/commute"
+      path='/login'
       render={() => 
         <div>
-          <GoogleLogOut/>
-          <HomePage/>
+          <GoogleLoginPage/>
         </div>
       }
     />
