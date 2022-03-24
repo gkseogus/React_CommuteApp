@@ -2,10 +2,6 @@
   "name": "react-redux-typescript-ecart",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "14.17.0",
-    "npm": "2.5.x"
-  },
   "dependencies": {
     "@chakra-ui/core": "^0.5.2",
     "@emotion/core": "^10.0.27",
