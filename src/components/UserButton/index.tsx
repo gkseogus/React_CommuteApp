@@ -207,7 +207,6 @@ const UserButton = (_props: any) => {
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
         
                 const sheetId = moment().format('YYYY-MM-DD');
-                // 퇴근버튼을 누르면 사용자에게 회사인지 재택인지 한번 더 확인하는 모달창
                 try {
                   const index = checkInOut.data?.index ?? checkInOut.lastIndex;
                   await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
