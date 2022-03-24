@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { ApplicationState } from '../../store';
 import { teamDate } from '../../teamData';
 import { trackPromise } from 'react-promise-tracker';
-import { confirmAlert } from "react-confirm-alert";
+import { confirmAlert } from 'react-confirm-alert';
 import "react-confirm-alert/src/react-confirm-alert.css"; 
 
 
