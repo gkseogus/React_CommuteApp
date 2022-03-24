@@ -13,7 +13,7 @@
     "@types/node": "^12.12.27",
     "antd": "^4.19.3",
     "axios": "^0.26.0",
-    "connected-react-router": "^6.7.0",
+    "connected-react-router": "^6.9.2",
     "emotion-theming": "^10.0.27",
     "firebase": "^9.6.9",
     "gapi": "^0.0.3",
