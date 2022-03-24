@@ -143,7 +143,7 @@ const HomePage = (_props: any) => {
     if(window.sessionStorage.length === 0){
       history.push('/login');
     }
-    
+
     // 스프레드 시트 api 가 로드되지 않았으면 Skip
     if (!checkGapi()) {
       return;
@@ -159,7 +159,7 @@ const HomePage = (_props: any) => {
     getSheet(sheetKey).then((sheet) => {
       setTargetData(converToState(sheet));
     });
-  }, [time]);
+  }, [history, time]);
 
   const rootData = useSelector(
     (state: ApplicationState) => state.inventory.data
