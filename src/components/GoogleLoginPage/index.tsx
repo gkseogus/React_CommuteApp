@@ -44,6 +44,8 @@ const LoginPage = (res: any) => {
           onSuccess={handleAuthClick}
           onFailure={responseFail}
           render={_renderProps => (<div></div>)}
+          uxMode='redirect'
+          redirectUri='http://localhost:3000/api/auth/callback/google'
           autoLoad={true}
         ></GoogleLogin>
       </div>
