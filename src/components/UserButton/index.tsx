@@ -2,13 +2,15 @@ import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ApplicationState } from '../../store';
 import { teamDate } from '../../teamData';
 import { trackPromise } from 'react-promise-tracker';
 import { confirmAlert } from 'react-confirm-alert';
 import "react-confirm-alert/src/react-confirm-alert.css"; 
+import { converToState, getSheet, loadTodaySheet } from '../GoogleSheet';
+import { fetchRequest } from '../../store/inventory/action';
 
 
 const Container = styled.div`
@@ -58,6 +60,7 @@ const useCheckInOutData = () => {
 }
 
 const UserButton = (_props: any) => {
+  const dispatch = useDispatch();
   const checkInOut = useCheckInOutData();
 
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
@@ -112,7 +115,15 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        window.location.reload();
+        // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+        getSheet(sheetId).then((sheet) => {
+          converToState(sheet);
+        });
+        trackPromise(
+          loadTodaySheet().then((response: any) => {
+            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+            dispatch(fetchRequest(converToState(response)));
+          }))
       } catch (err) {
         console.log('error:', err);
       }
@@ -165,7 +176,15 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        window.location.reload();
+        // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+        getSheet(sheetId).then((sheet) => {
+          converToState(sheet);
+        });
+        trackPromise(
+          loadTodaySheet().then((response: any) => {
+            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+            dispatch(fetchRequest(converToState(response)));
+          }))
       } catch (err) {
         console.log('error:', err);
       }
@@ -227,10 +246,18 @@ const UserButton = (_props: any) => {
                     ],
                   })
                   );
-                  window.location.reload();
                 } catch (err) {
                   console.log('error:', err);
                 }
+              // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+              getSheet(sheetId).then((sheet) => {
+                converToState(sheet);
+              });
+              trackPromise(
+                loadTodaySheet().then((response: any) => {
+                  // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                  dispatch(fetchRequest(converToState(response)));
+                }))
             }
           },        
           {
@@ -275,7 +302,15 @@ const UserButton = (_props: any) => {
                     ],
                   })
                   );
-                  window.location.reload();
+                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                  getSheet(sheetId).then((sheet) => {
+                    converToState(sheet);
+                  });
+                  trackPromise(
+                    loadTodaySheet().then((response: any) => {
+                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                      dispatch(fetchRequest(converToState(response)));
+                    }))
                 } catch (err) {
                   console.log('error:', err);
                 }
@@ -329,7 +364,15 @@ const UserButton = (_props: any) => {
                     ],
                   })
                   );
-                  window.location.reload();
+                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                  getSheet(sheetId).then((sheet) => {
+                    converToState(sheet);
+                  });
+                  trackPromise(
+                    loadTodaySheet().then((response: any) => {
+                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                      dispatch(fetchRequest(converToState(response)));
+                    }))
                 } catch (err) {
                   console.log('error:', err);
                 }
@@ -377,7 +420,15 @@ const UserButton = (_props: any) => {
                     ],
                   })
                   );
-                  window.location.reload();
+                // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                getSheet(sheetId).then((sheet) => {
+                  converToState(sheet);
+                });
+                trackPromise(
+                  loadTodaySheet().then((response: any) => {
+                    // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                    dispatch(fetchRequest(converToState(response)));
+                  }))
                 } catch (err) {
                   console.log('error:', err);
                 }
