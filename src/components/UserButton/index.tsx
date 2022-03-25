@@ -178,11 +178,11 @@ const UserButton = (_props: any) => {
   const reverseDisable = async () => {
     if(checkInOut.data?.homeWork === '재택'){
       confirmAlert({
-        title: `현재 당신은 재택 퇴근입니다.`,
-        message: '변경하시려면 회사 버튼을 눌러주세요',
+        title: `현재 재택 퇴근입니다.`,
+        message: '퇴근환경을 변경하시려면 변경을 눌러주세요',
         buttons:[
           {
-            label: '회사',
+            label: '변경',
             onClick: async () => {
               window.localStorage.setItem('user_workState', '회사');
               const userEmail = window.sessionStorage.user_email;
@@ -286,11 +286,11 @@ const UserButton = (_props: any) => {
     }
     else if(checkInOut.data?.homeWork === '회사'){
       confirmAlert({
-        title: `현재 당신은 회사 퇴근입니다.`,
-        message: '변경하시려면 재택 버튼을 눌러주세요',
+        title: `현재 회사 퇴근입니다.`,
+        message: '퇴근환경을 변경하시려면 변경을 눌러주세요',
         buttons:[
           {
-            label: '재택',
+            label: '변경',
             onClick: async () => {
               window.localStorage.setItem('user_workState', '재택');
               const userEmail = window.sessionStorage.user_email;
@@ -396,25 +396,25 @@ const UserButton = (_props: any) => {
           disabled={checkInButtonDisaled}
           onClick={btnDisable}
         >
-          출근
+          재택
         </Button>
       </Container>
       <Container2>
-        <Button
-          type="primary"
-          disabled={checkOutButtonDisabled}
-          onClick={reverseDisable}
-        >
-          퇴근
-        </Button>
-      </Container2>
-      <Container3>
         <Button 
           type="primary"
           disabled={companyWorkButtonDisaled}
           onClick={companyWork}
         >
           회사
+        </Button>
+      </Container2>
+      <Container3>
+        <Button
+          type="primary"
+          disabled={checkOutButtonDisabled}
+          onClick={reverseDisable}
+        >
+          퇴근
         </Button>
       </Container3>
     </div>
