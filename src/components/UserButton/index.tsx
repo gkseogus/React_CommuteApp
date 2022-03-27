@@ -116,8 +116,10 @@ const UserButton = (_props: any) => {
         })
         );
         // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-        getSheet(sheetId).then((sheet) => {
-          converToState(sheet);
+        getSheet(sheetId).then(({res, sheet}) => {
+          if(res === 200) {
+            converToState(sheet);
+          }
         });
         trackPromise(
           loadTodaySheet().then((response: any) => {
@@ -177,8 +179,10 @@ const UserButton = (_props: any) => {
         })
         );
         // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-        getSheet(sheetId).then((sheet) => {
-          converToState(sheet);
+        getSheet(sheetId).then(({res, sheet}) => {
+          if(res === 200) {
+            converToState(sheet);
+          }
         });
         trackPromise(
           loadTodaySheet().then((response: any) => {
@@ -250,8 +254,10 @@ const UserButton = (_props: any) => {
                   console.log('error:', err);
                 }
               // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-              getSheet(sheetId).then((sheet) => {
-                converToState(sheet);
+              getSheet(sheetId).then(({res, sheet}) => {
+                if(res === 200) {
+                  converToState(sheet);
+                }
               });
               trackPromise(
                 loadTodaySheet().then((response: any) => {
@@ -303,8 +309,10 @@ const UserButton = (_props: any) => {
                   })
                   );
                   // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                  getSheet(sheetId).then((sheet) => {
-                    converToState(sheet);
+                  getSheet(sheetId).then(({res, sheet}) => {
+                    if(res === 200) {
+                      converToState(sheet);
+                    }
                   });
                   trackPromise(
                     loadTodaySheet().then((response: any) => {
@@ -365,8 +373,10 @@ const UserButton = (_props: any) => {
                   })
                   );
                   // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                  getSheet(sheetId).then((sheet) => {
-                    converToState(sheet);
+                  getSheet(sheetId).then(({res, sheet}) => {
+                    if(res === 200) {
+                      converToState(sheet);
+                    }
                   });
                   trackPromise(
                     loadTodaySheet().then((response: any) => {
@@ -421,8 +431,10 @@ const UserButton = (_props: any) => {
                   })
                   );
                 // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                getSheet(sheetId).then((sheet) => {
-                  converToState(sheet);
+                getSheet(sheetId).then(({res, sheet}) => {
+                  if(res === 200) {
+                    converToState(sheet);
+                  }
                 });
                 trackPromise(
                   loadTodaySheet().then((response: any) => {
