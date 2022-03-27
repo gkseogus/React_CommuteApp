@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, { useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
@@ -20,6 +21,7 @@ const LoginPage = (res: any) => {
   const handleAuthClick = async (res: any) => {
     // window.gapi.auth2.getAuthInstance().signIn();
     console.error('Login', res);
+    window.localStorage.setItem('setTime',moment().format('YYYY MM월 DD일'));
     window.sessionStorage.setItem('user_id', res.googleId);
     window.sessionStorage.setItem('user_email', res.Ju.zv);
     window.sessionStorage.setItem('user_name', res.Ju.sf);

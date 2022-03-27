@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ApplicationState } from '../../store';
@@ -230,7 +230,8 @@ const UserButton = (_props: any) => {
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
         
-                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
+                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
+                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -267,7 +268,8 @@ const UserButton = (_props: any) => {
                     dispatch(fetchRequest(converToState(response)));
                   }))
                 }
-                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
+                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
+                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -361,7 +363,8 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
+                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
+                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -462,7 +465,8 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
+                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
+                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -554,7 +558,8 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
+                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
+                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
