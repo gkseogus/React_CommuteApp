@@ -62,7 +62,6 @@ const useCheckInOutData = () => {
 const UserButton = (_props: any) => {
   const dispatch = useDispatch();
   const checkInOut = useCheckInOutData();
-  const [checkStateDate, setCheckStateDate] = useState('');
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn
@@ -77,7 +76,7 @@ const UserButton = (_props: any) => {
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
       const attendanceDate2 = moment().format('YYYY MM월 DD일');
-      setCheckStateDate(attendanceDate2);
+      window.localStorage.setItem('attendanceDate2',attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -145,7 +144,7 @@ const UserButton = (_props: any) => {
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
       const attendanceDate2 = moment().format('YYYY MM월 DD일');
-      setCheckStateDate(attendanceDate2);
+      window.localStorage.setItem('attendanceDate2',attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -231,7 +230,7 @@ const UserButton = (_props: any) => {
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
         
-                if(leaveDate.format('YYYY MM월 DD일') !==  String(checkStateDate)){
+                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -268,7 +267,7 @@ const UserButton = (_props: any) => {
                     dispatch(fetchRequest(converToState(response)));
                   }))
                 }
-                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -362,7 +361,7 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -463,7 +462,7 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -555,8 +554,7 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                
-                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                if(leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2){
                   const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
