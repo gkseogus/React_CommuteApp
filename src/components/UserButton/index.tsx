@@ -213,6 +213,8 @@ const UserButton = (_props: any) => {
               // moment 연산을 위한 변수 재지정
               let leaveDate = moment(new Date());
               
+              // 출근 날짜와 퇴근 날짜가 다르면 퇴근 날짜를 23시 59분 59초로 설정
+              // toDate = moment 객체를 날짜 객체로 변환
               if (moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate().getDate() !== leaveDate.toDate().getDate()) {
                 const date = moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate();
                 date.setHours(23);
