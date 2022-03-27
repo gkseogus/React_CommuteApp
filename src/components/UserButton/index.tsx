@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { ApplicationState } from '../../store';
@@ -62,7 +62,7 @@ const useCheckInOutData = () => {
 const UserButton = (_props: any) => {
   const dispatch = useDispatch();
   const checkInOut = useCheckInOutData();
-
+  const [checkStateDate, setCheckStateDate] = useState('');
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const checkOutButtonDisabled = !checkInOut.isCheckIn
@@ -76,7 +76,8 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-
+      const attendanceDate2 = moment().format('YYYY MM월 DD일');
+      setCheckStateDate(attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -143,7 +144,8 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-
+      const attendanceDate2 = moment().format('YYYY MM월 DD일');
+      setCheckStateDate(attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -229,6 +231,80 @@ const UserButton = (_props: any) => {
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
         
+                if(leaveDate.format('YYYY MM월 DD일') !==  String(checkStateDate)){
+                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+                          // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '회사'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
+                // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                getSheet(sheetId2).then(({res, sheet}) => {
+                  if(res === 200) {
+                    converToState(sheet);
+                  }
+                });
+                trackPromise(
+                  loadTodaySheet().then((response: any) => {
+                    // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                    dispatch(fetchRequest(converToState(response)));
+                  }))
+                }
+                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+                          // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
+                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '회사'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
+                // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                getSheet(sheetId2).then(({res, sheet}) => {
+                  if(res === 200) {
+                    converToState(sheet);
+                  }
+                });
+                trackPromise(
+                  loadTodaySheet().then((response: any) => {
+                    // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                    dispatch(fetchRequest(converToState(response)));
+                  }))
+                }
                 const sheetId = moment().format('YYYY-MM-DD');
                 try {
                   const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -286,7 +362,43 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-        
+                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+    
+                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '재택'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                    getSheet(sheetId2).then(({res, sheet}) => {
+                      if(res === 200) {
+                        converToState(sheet);
+                      }
+                    });
+                    trackPromise(
+                      loadTodaySheet().then((response: any) => {
+                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                        dispatch(fetchRequest(converToState(response)));
+                      }))
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
+                }
                 const sheetId = moment().format('YYYY-MM-DD');
                 try {
                   const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -351,7 +463,42 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-        
+                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '재택'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                    getSheet(sheetId2).then(({res, sheet}) => {
+                      if(res === 200) {
+                        converToState(sheet);
+                      }
+                    });
+                    trackPromise(
+                      loadTodaySheet().then((response: any) => {
+                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                        dispatch(fetchRequest(converToState(response)));
+                      }))
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
+                }
                 const sheetId = moment().format('YYYY-MM-DD');
                 try {
                   const index = checkInOut.data?.index ?? checkInOut.lastIndex;
@@ -408,7 +555,44 @@ const UserButton = (_props: any) => {
               const workHours = Math.floor(momentDuration.asHours());
               const workState =
                 workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-        
+                
+                if(leaveDate.format('YYYY MM월 DD일') !==  checkStateDate){
+                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+    
+                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '회사'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                  getSheet(sheetId2).then(({res, sheet}) => {
+                    if(res === 200) {
+                      converToState(sheet);
+                    }
+                  });
+                  trackPromise(
+                    loadTodaySheet().then((response: any) => {
+                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                      dispatch(fetchRequest(converToState(response)));
+                    }))
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
+                }
                 const sheetId = moment().format('YYYY-MM-DD');
                 try {
                   const index = checkInOut.data?.index ?? checkInOut.lastIndex;
