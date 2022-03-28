@@ -112,12 +112,15 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        trackPromise(
-          loadTodaySheet().then((res: any) => {
-            if(res === 200) {
-              dispatch(fetchRequest(converToState(res)));
-            }
-          }))
+
+        // 네트워크 요청을 보장
+        const res = new Response();
+        if(res.status === 200) {
+          trackPromise(
+            loadTodaySheet().then((res: any) => {
+                dispatch(fetchRequest(converToState(res)));
+            }));
+        }
       } catch (err) {
         console.log('error:', err);
       }
@@ -168,12 +171,14 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        trackPromise(
-          loadTodaySheet().then((res: any) => {
-            if(res === 200) {
-              dispatch(fetchRequest(converToState(res)));
-            }
-          }))
+
+        const res = new Response();
+        if(res.status === 200) {
+          trackPromise(
+            loadTodaySheet().then((res: any) => {
+                dispatch(fetchRequest(converToState(res)));
+            }));
+        }
       } catch (err) {
         console.log('error:', err);
       }
@@ -242,15 +247,17 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
+ 
+                    const res = new Response();
+                    if(res.status === 200) {
+                      trackPromise(
+                        loadTodaySheet().then((res: any) => {
+                            dispatch(fetchRequest(converToState(res)));
+                        }));
+                    }
                   } catch (err) {
                     console.log('error:', err);
                   }
-                  trackPromise(
-                    loadTodaySheet().then((res: any) => {
-                      if(res === 200) {
-                        dispatch(fetchRequest(converToState(res)));
-                      }
-                    }))
             }
           },        
           {
@@ -261,7 +268,6 @@ const UserButton = (_props: any) => {
   
               let leaveDate = moment(new Date());
           
-              
               if (moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate().getDate() !== leaveDate.toDate().getDate()) {
                 const date = moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate();
                 date.setHours(23);
@@ -302,12 +308,14 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    trackPromise(
-                      loadTodaySheet().then((res: any) => {
-                        if(res === 200) {
-                          dispatch(fetchRequest(converToState(res)));
-                        }
-                      }))
+
+                    const res = new Response();
+                    if(res.status === 200) {
+                      trackPromise(
+                        loadTodaySheet().then((res: any) => {
+                            dispatch(fetchRequest(converToState(res)));
+                        }));
+                    }
                   } catch (err) {
                     console.log('error:', err);
                 }
@@ -339,7 +347,6 @@ const UserButton = (_props: any) => {
 
               const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
             
-
               const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
                 moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
               );
@@ -369,12 +376,14 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
+
+                    const res = new Response();
+                    if(res.status === 200) {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
-                          if(res === 200) {
                             dispatch(fetchRequest(converToState(res)));
-                          }
-                        }))
+                        }));
+                    }
                   } catch (err) {
                     console.log('error:', err);
                   }
@@ -429,12 +438,14 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    trackPromise(
-                      loadTodaySheet().then((res: any) => {
-                        if(res === 200) {
-                          dispatch(fetchRequest(converToState(res)));
-                        }
-                      }))
+                    
+                    const res = new Response();
+                    if(res.status === 200) {
+                      trackPromise(
+                        loadTodaySheet().then((res: any) => {
+                            dispatch(fetchRequest(converToState(res)));
+                        }));
+                    }
                   } catch (err) {
                     console.log('error:', err);
                   }
