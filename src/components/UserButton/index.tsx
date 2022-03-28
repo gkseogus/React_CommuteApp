@@ -268,9 +268,8 @@ const UserButton = (_props: any) => {
                     dispatch(fetchRequest(converToState(response)));
                   }))
                 }
-                if((leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.attendanceDate2) && 
-                (leaveDate.format('YYYY MM월 DD일') !==  window.localStorage.setTime)) {
-                  const sheetId2 = moment().subtract(1, 'days').format('YYYY-MM-DD');
+                else{
+                  const sheetId = moment().format('YYYY-MM-DD');
                   try {
                     const index = checkInOut.data?.index ?? checkInOut.lastIndex;
                     await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
@@ -279,7 +278,7 @@ const UserButton = (_props: any) => {
                       data: [
                         {
                           // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-                          range: `'${sheetId2}'!D${index}:H${index}`,
+                          range: `'${sheetId}'!D${index}:H${index}`,
                           values: [[
                             leaveDateFormat, 
                             time, 
@@ -294,53 +293,18 @@ const UserButton = (_props: any) => {
                   } catch (err) {
                     console.log('error:', err);
                   }
-                // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                getSheet(sheetId2).then(({res, sheet}) => {
-                  if(res === 200) {
-                    converToState(sheet);
-                  }
-                });
-                trackPromise(
-                  loadTodaySheet().then((response: any) => {
-                    // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-                    dispatch(fetchRequest(converToState(response)));
-                  }))
+                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                    getSheet(sheetId).then(({res, sheet}) => {
+                      if(res === 200) {
+                        converToState(sheet);
+                      }
+                    });
+                    trackPromise(
+                      loadTodaySheet().then((response: any) => {
+                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                        dispatch(fetchRequest(converToState(response)));
+                      }))
                 }
-                const sheetId = moment().format('YYYY-MM-DD');
-                try {
-                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                    valueInputOption: 'USER_ENTERED',
-                    data: [
-                      {
-                        // 오늘 시트의 D index 번째 컬럼부터 H index 번째 컬럼까지 데이터를 채움
-                        range: `'${sheetId}'!D${index}:H${index}`,
-                        values: [[
-                          leaveDateFormat, 
-                          time, 
-                          workState, 
-                          userEmail,
-                          '회사'
-                        ]],
-                      },
-                    ],
-                  })
-                  );
-                } catch (err) {
-                  console.log('error:', err);
-                }
-              // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-              getSheet(sheetId).then(({res, sheet}) => {
-                if(res === 200) {
-                  converToState(sheet);
-                }
-              });
-              trackPromise(
-                loadTodaySheet().then((response: any) => {
-                  // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-                  dispatch(fetchRequest(converToState(response)));
-                }))
             }
           },        
           {
@@ -401,40 +365,42 @@ const UserButton = (_props: any) => {
                     console.log('error:', err);
                   }
                 }
-                const sheetId = moment().format('YYYY-MM-DD');
-                try {
-                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                    valueInputOption: 'USER_ENTERED',
-                    data: [
-                      {
-  
-                        range: `'${sheetId}'!D${index}:H${index}`,
-                        values: [[
-                          leaveDateFormat, 
-                          time, 
-                          workState, 
-                          userEmail,
-                          '재택'
-                        ]],
-                      },
-                    ],
-                  })
-                  );
-                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                  getSheet(sheetId).then(({res, sheet}) => {
-                    if(res === 200) {
-                      converToState(sheet);
-                    }
-                  });
-                  trackPromise(
-                    loadTodaySheet().then((response: any) => {
-                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-                      dispatch(fetchRequest(converToState(response)));
-                    }))
-                } catch (err) {
-                  console.log('error:', err);
+                else{
+                  const sheetId = moment().format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+    
+                          range: `'${sheetId}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '재택'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                    getSheet(sheetId).then(({res, sheet}) => {
+                      if(res === 200) {
+                        converToState(sheet);
+                      }
+                    });
+                    trackPromise(
+                      loadTodaySheet().then((response: any) => {
+                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                        dispatch(fetchRequest(converToState(response)));
+                      }))
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
                 }
             }
           }
@@ -502,39 +468,41 @@ const UserButton = (_props: any) => {
                     console.log('error:', err);
                   }
                 }
-                const sheetId = moment().format('YYYY-MM-DD');
-                try {
-                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                    valueInputOption: 'USER_ENTERED',
-                    data: [
-                      {
-                        range: `'${sheetId}'!D${index}:H${index}`,
-                        values: [[
-                          leaveDateFormat, 
-                          time, 
-                          workState, 
-                          userEmail,
-                          '재택'
-                        ]],
-                      },
-                    ],
-                  })
-                  );
-                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                  getSheet(sheetId).then(({res, sheet}) => {
-                    if(res === 200) {
-                      converToState(sheet);
-                    }
-                  });
-                  trackPromise(
-                    loadTodaySheet().then((response: any) => {
-                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-                      dispatch(fetchRequest(converToState(response)));
-                    }))
-                } catch (err) {
-                  console.log('error:', err);
+                else{
+                  const sheetId = moment().format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+                          range: `'${sheetId}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '재택'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                    getSheet(sheetId).then(({res, sheet}) => {
+                      if(res === 200) {
+                        converToState(sheet);
+                      }
+                    });
+                    trackPromise(
+                      loadTodaySheet().then((response: any) => {
+                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                        dispatch(fetchRequest(converToState(response)));
+                      }))
+                  } catch (err) {
+                    console.log('error:', err);
+                  }
                 }
             }
           },        
@@ -596,40 +564,42 @@ const UserButton = (_props: any) => {
                     console.log('error:', err);
                   }
                 }
-                const sheetId = moment().format('YYYY-MM-DD');
-                try {
-                  const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                  await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                    spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                    valueInputOption: 'USER_ENTERED',
-                    data: [
-                      {
-  
-                        range: `'${sheetId}'!D${index}:H${index}`,
-                        values: [[
-                          leaveDateFormat, 
-                          time, 
-                          workState, 
-                          userEmail,
-                          '회사'
-                        ]],
-                      },
-                    ],
-                  })
-                  );
-                // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-                getSheet(sheetId).then(({res, sheet}) => {
-                  if(res === 200) {
-                    converToState(sheet);
+                else{
+                  const sheetId = moment().format('YYYY-MM-DD');
+                  try {
+                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                      valueInputOption: 'USER_ENTERED',
+                      data: [
+                        {
+    
+                          range: `'${sheetId}'!D${index}:H${index}`,
+                          values: [[
+                            leaveDateFormat, 
+                            time, 
+                            workState, 
+                            userEmail,
+                            '회사'
+                          ]],
+                        },
+                      ],
+                    })
+                    );
+                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
+                  getSheet(sheetId).then(({res, sheet}) => {
+                    if(res === 200) {
+                      converToState(sheet);
+                    }
+                  });
+                  trackPromise(
+                    loadTodaySheet().then((response: any) => {
+                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
+                      dispatch(fetchRequest(converToState(response)));
+                    }))
+                  } catch (err) {
+                    console.log('error:', err);
                   }
-                });
-                trackPromise(
-                  loadTodaySheet().then((response: any) => {
-                    // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-                    dispatch(fetchRequest(converToState(response)));
-                  }))
-                } catch (err) {
-                  console.log('error:', err);
                 }
             }
           }
