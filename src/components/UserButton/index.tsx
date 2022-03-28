@@ -112,7 +112,6 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
         getSheet(sheetId).then(({res, sheet}) => {
           if(res === 200) {
             converToState(sheet);
@@ -173,7 +172,6 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
         getSheet(sheetId).then(({res, sheet}) => {
           if(res === 200) {
             converToState(sheet);
@@ -181,7 +179,6 @@ const UserButton = (_props: any) => {
         });
         trackPromise(
           loadTodaySheet().then((response: any) => {
-            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
             dispatch(fetchRequest(converToState(response)));
           }))
       } catch (err) {
@@ -255,7 +252,6 @@ const UserButton = (_props: any) => {
                   } catch (err) {
                     console.log('error:', err);
                   }
-                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
                     getSheet(sheetId).then(({res, sheet}) => {
                       if(res === 200) {
                         converToState(sheet);
@@ -263,7 +259,6 @@ const UserButton = (_props: any) => {
                     });
                     trackPromise(
                       loadTodaySheet().then((response: any) => {
-                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
                         dispatch(fetchRequest(converToState(response)));
                       }))
             }
@@ -317,7 +312,6 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
                     getSheet(sheetId).then(({res, sheet}) => {
                       if(res === 200) {
                         converToState(sheet);
@@ -325,7 +319,6 @@ const UserButton = (_props: any) => {
                     });
                     trackPromise(
                       loadTodaySheet().then((response: any) => {
-                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
                         dispatch(fetchRequest(converToState(response)));
                       }))
                   } catch (err) {
@@ -389,7 +382,6 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
                     getSheet(sheetId).then(({res, sheet}) => {
                       if(res === 200) {
                         converToState(sheet);
@@ -397,7 +389,6 @@ const UserButton = (_props: any) => {
                     });
                     trackPromise(
                       loadTodaySheet().then((response: any) => {
-                        // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
                         dispatch(fetchRequest(converToState(response)));
                       }))
                   } catch (err) {
@@ -454,7 +445,6 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                  // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
                   getSheet(sheetId).then(({res, sheet}) => {
                     if(res === 200) {
                       converToState(sheet);
@@ -462,7 +452,6 @@ const UserButton = (_props: any) => {
                   });
                   trackPromise(
                     loadTodaySheet().then((response: any) => {
-                      // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
                       dispatch(fetchRequest(converToState(response)));
                     }))
                   } catch (err) {
