@@ -9,7 +9,7 @@ import { teamDate } from '../../teamData';
 import { trackPromise } from 'react-promise-tracker';
 import { confirmAlert } from 'react-confirm-alert';
 import "react-confirm-alert/src/react-confirm-alert.css"; 
-import { converToState, getSheet, loadTodaySheet } from '../GoogleSheet';
+import { converToState, loadTodaySheet } from '../GoogleSheet';
 import { fetchRequest } from '../../store/inventory/action';
 
 
@@ -112,15 +112,11 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        getSheet(sheetId).then(({res, sheet}) => {
-          if(res === 200) {
-            converToState(sheet);
-          }
-        });
         trackPromise(
-          loadTodaySheet().then((response: any) => {
-            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
-            dispatch(fetchRequest(converToState(response)));
+          loadTodaySheet().then((res: any) => {
+            if(res === 200) {
+              dispatch(fetchRequest(converToState(res)));
+            }
           }))
       } catch (err) {
         console.log('error:', err);
@@ -172,14 +168,11 @@ const UserButton = (_props: any) => {
           ],
         })
         );
-        getSheet(sheetId).then(({res, sheet}) => {
-          if(res === 200) {
-            converToState(sheet);
-          }
-        });
         trackPromise(
-          loadTodaySheet().then((response: any) => {
-            dispatch(fetchRequest(converToState(response)));
+          loadTodaySheet().then((res: any) => {
+            if(res === 200) {
+              dispatch(fetchRequest(converToState(res)));
+            }
           }))
       } catch (err) {
         console.log('error:', err);
@@ -252,15 +245,12 @@ const UserButton = (_props: any) => {
                   } catch (err) {
                     console.log('error:', err);
                   }
-                    getSheet(sheetId).then(({res, sheet}) => {
+                  trackPromise(
+                    loadTodaySheet().then((res: any) => {
                       if(res === 200) {
-                        converToState(sheet);
+                        dispatch(fetchRequest(converToState(res)));
                       }
-                    });
-                    trackPromise(
-                      loadTodaySheet().then((response: any) => {
-                        dispatch(fetchRequest(converToState(response)));
-                      }))
+                    }))
             }
           },        
           {
@@ -312,14 +302,11 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    getSheet(sheetId).then(({res, sheet}) => {
-                      if(res === 200) {
-                        converToState(sheet);
-                      }
-                    });
                     trackPromise(
-                      loadTodaySheet().then((response: any) => {
-                        dispatch(fetchRequest(converToState(response)));
+                      loadTodaySheet().then((res: any) => {
+                        if(res === 200) {
+                          dispatch(fetchRequest(converToState(res)));
+                        }
                       }))
                   } catch (err) {
                     console.log('error:', err);
@@ -382,15 +369,12 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                    getSheet(sheetId).then(({res, sheet}) => {
-                      if(res === 200) {
-                        converToState(sheet);
-                      }
-                    });
-                    trackPromise(
-                      loadTodaySheet().then((response: any) => {
-                        dispatch(fetchRequest(converToState(response)));
-                      }))
+                      trackPromise(
+                        loadTodaySheet().then((res: any) => {
+                          if(res === 200) {
+                            dispatch(fetchRequest(converToState(res)));
+                          }
+                        }))
                   } catch (err) {
                     console.log('error:', err);
                   }
@@ -445,15 +429,12 @@ const UserButton = (_props: any) => {
                       ],
                     })
                     );
-                  getSheet(sheetId).then(({res, sheet}) => {
-                    if(res === 200) {
-                      converToState(sheet);
-                    }
-                  });
-                  trackPromise(
-                    loadTodaySheet().then((response: any) => {
-                      dispatch(fetchRequest(converToState(response)));
-                    }))
+                    trackPromise(
+                      loadTodaySheet().then((res: any) => {
+                        if(res === 200) {
+                          dispatch(fetchRequest(converToState(res)));
+                        }
+                      }))
                   } catch (err) {
                     console.log('error:', err);
                   }
