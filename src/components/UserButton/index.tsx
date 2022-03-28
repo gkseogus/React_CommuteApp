@@ -75,7 +75,6 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-      console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
       let team = '';
@@ -141,8 +140,7 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-      console.log('출근시간', attendanceDate);
-  
+
       // 로그인 사용자의 id를 조회해 팀 값을 결정
       let team = '';
       for (let i = 0; i < teamDate.length; i++) {
