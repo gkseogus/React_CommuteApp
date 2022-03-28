@@ -64,8 +64,8 @@ const UserButton = (_props: any) => {
   const checkInOut = useCheckInOutData();
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
-  const checkOutButtonDisabled = !checkInOut.isCheckIn
   const companyWorkButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
+  const checkOutButtonDisabled = !checkInOut.isCheckIn
 
   const btnDisable = async () => {
     const checkInAlert = window.confirm('재택 출근하시겠습니까?');
@@ -75,8 +75,6 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-      const attendanceDate2 = moment().format('YYYY MM월 DD일');
-      window.localStorage.setItem('attendanceDate2',attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
@@ -143,8 +141,6 @@ const UserButton = (_props: any) => {
       const userEmail = window.sessionStorage.user_email;
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
-      const attendanceDate2 = moment().format('YYYY MM월 DD일');
-      window.localStorage.setItem('attendanceDate2',attendanceDate2);
       console.log('출근시간', attendanceDate);
   
       // 로그인 사용자의 id를 조회해 팀 값을 결정
