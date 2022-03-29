@@ -118,11 +118,14 @@ const UserButton = (_props: any) => {
         if(res.status === 200) {
           trackPromise(
             loadTodaySheet().then((res: any) => {
-              dispatch(fetchRequestToUpdate(converToState(res)));
-            }));
-          getSheet(sheetId).then((sheet) => {
-            dispatch(fetchRequest(converToState(sheet)));
-          });
+                dispatch(fetchRequestToUpdate(converToState(res)));
+            })
+          );
+          trackPromise(
+              getSheet(sheetId).then((sheet) => {
+                dispatch(fetchRequest(converToState(sheet)));
+            })
+          );
         }
       } catch (err) {
         console.log('error:', err);
@@ -180,10 +183,13 @@ const UserButton = (_props: any) => {
           trackPromise(
             loadTodaySheet().then((res: any) => {
                 dispatch(fetchRequestToUpdate(converToState(res)));
-            }));
-          getSheet(sheetId).then((sheet) => {
-            dispatch(fetchRequest(converToState(sheet)));
-          });
+            })
+          );
+          trackPromise(
+              getSheet(sheetId).then((sheet) => {
+                dispatch(fetchRequest(converToState(sheet)));
+            })
+          );
         }
       } catch (err) {
         console.log('error:', err);
@@ -259,10 +265,13 @@ const UserButton = (_props: any) => {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
                             dispatch(fetchRequestToUpdate(converToState(res)));
-                        }));
-                      getSheet(sheetId).then((sheet) => {
-                        dispatch(fetchRequest(converToState(sheet)));
-                      });
+                        })
+                      );
+                      trackPromise(
+                          getSheet(sheetId).then((sheet) => {
+                            dispatch(fetchRequest(converToState(sheet)));
+                        })
+                      );
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -323,10 +332,13 @@ const UserButton = (_props: any) => {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
                             dispatch(fetchRequestToUpdate(converToState(res)));
-                        }));
-                      getSheet(sheetId).then((sheet) => {
-                        dispatch(fetchRequest(converToState(sheet)));
-                      });
+                        })
+                      );
+                      trackPromise(
+                          getSheet(sheetId).then((sheet) => {
+                            dispatch(fetchRequest(converToState(sheet)));
+                        })
+                      );
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -394,10 +406,13 @@ const UserButton = (_props: any) => {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
                             dispatch(fetchRequestToUpdate(converToState(res)));
-                        }));
-                      getSheet(sheetId).then((sheet) => {
-                        dispatch(fetchRequest(converToState(sheet)));
-                      });
+                        })
+                      );
+                      trackPromise(
+                          getSheet(sheetId).then((sheet) => {
+                            dispatch(fetchRequest(converToState(sheet)));
+                        })
+                      );
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -459,10 +474,13 @@ const UserButton = (_props: any) => {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
                             dispatch(fetchRequestToUpdate(converToState(res)));
-                        }));
-                      getSheet(sheetId).then((sheet) => {
-                        dispatch(fetchRequest(converToState(sheet)));
-                      });
+                        })
+                      );
+                      trackPromise(
+                          getSheet(sheetId).then((sheet) => {
+                            dispatch(fetchRequest(converToState(sheet)));
+                        })
+                      );
                     }
                   } catch (err) {
                     console.log('error:', err);
