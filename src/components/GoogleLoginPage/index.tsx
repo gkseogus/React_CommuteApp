@@ -2,6 +2,26 @@ import moment from 'moment';
 import React, { useEffect } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+
+const Container = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  background-size: cover;
+`
+
+const HnineFont = styled.h1`
+  font-size: 200px;
+  font-weight: 600;
+  text-align: center;
+  background: linear-gradient(to right top, #861657, #ffa69e);
+  color: transparent;
+  -webkit-background-clip: text;
+`
 
 // 개발자 콘솔에서 불러올 클라이언트 ID 및 API 키
 const CLIENT_ID = '653145946472-jn4efggid62mt7ceunkrvehioalffl32.apps.googleusercontent.com';
@@ -33,7 +53,8 @@ const LoginPage = (res: any) => {
   });
 
     return (
-      <div>
+      <Container>
+        <HnineFont>HNINE</HnineFont>
         <GoogleLogin
           clientId={CLIENT_ID}
           onSuccess={handleAuthClick}
@@ -43,7 +64,7 @@ const LoginPage = (res: any) => {
           redirectUri='http://localhost:3000/api/auth/callback/google'
           autoLoad={true}
         ></GoogleLogin>
-      </div>
+      </Container>
     );
 };
 
