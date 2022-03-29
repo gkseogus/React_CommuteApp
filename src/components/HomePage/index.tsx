@@ -1,10 +1,12 @@
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
+import moment from 'moment';
 import { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { ApplicationState } from '../../store';
+import { fetchRequest } from '../../store/inventory/action';
 import HomeDatePicker from '../DatePicker';
 import { checkGapi, converToState, getSheet } from '../GoogleSheet';
 import UserButton from '../UserButton';
@@ -136,9 +138,17 @@ const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
 const HomePage = (_props: any) => {
   const [name, setName] = useState('');
   const [time, setTime] = useState<Moment>();
-  const [targetData, setTargetData] = useState();
   const history = useHistory();
+  const dispatch = useDispatch();
 
+  const rootData = useSelector(
+    (state: ApplicationState) => state.inventory.update
+  );
+
+  const targetData = useSelector(
+    (state: ApplicationState) => state.inventory.data
+  )
+  
   useEffect(() => {
     if(window.sessionStorage.length === 0){
       history.push('/login');
@@ -148,22 +158,22 @@ const HomePage = (_props: any) => {
     if (!checkGapi()) {
       return;
     }
-    // 날짜 데이터가 없을 경우
+    // 날짜를 선택하지 않을 경우
     if (!time) {
-      setTargetData(undefined);
-      return;
+      const todayKey = moment().format('YYYY-MM-DD');
+      getSheet(todayKey).then((sheet) => {
+        dispatch(fetchRequest(converToState(sheet)));
+      });
     }
 
-    // 날짜가 선택되면 해당 날짜의 시트를 불러와서 테이블에 보여줌
-    const sheetKey = time.format('YYYY-MM-DD');
-    getSheet(sheetKey).then((sheet) => {
-      setTargetData(converToState(sheet));
-    });
-  }, [history, time]);
-
-  const rootData = useSelector(
-    (state: ApplicationState) => state.inventory.data
-  );
+    // 날짜를 선택할 경우
+    else {
+      const sheetKey = time.format('YYYY-MM-DD');
+      getSheet(sheetKey).then((sheet) => {
+        dispatch(fetchRequest(converToState(sheet)));
+      });
+    }
+  }, [dispatch, history, time]);
 
   // 지난 날짜, 현재 날짜에 대한 유저 검색
   // targetData는 지난 날짜 데이터를 보여주는 상태값
