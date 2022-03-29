@@ -1,4 +1,4 @@
-import { FETCH_ERROR,FETCH_SUCCESS } from './types';
+import { FETCH_ERROR,FETCH_SUCCESS, FETCH_UPDATE } from './types';
 
 import { ActionCreator, Action, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
@@ -19,6 +19,22 @@ export const fetchRequest: AppThunk = (item) => {
     try {
       return dispatch({ // 리듀서에게 apiData.data 전송
         type: FETCH_SUCCESS,
+        payload: item 
+      });
+    } catch (e) { 
+      return dispatch({
+        type: FETCH_ERROR
+      });
+    }
+  };
+};
+
+// apiData를 받아와 reducer에게 데이터를 전송
+export const fetchRequestToUpdate: AppThunk = (item) => {
+  return (dispatch: Dispatch): Action => {
+    try {
+      return dispatch({ // 리듀서에게 apiData.data 전송
+        type: FETCH_UPDATE,
         payload: item 
       });
     } catch (e) { 
