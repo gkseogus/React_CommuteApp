@@ -6,6 +6,7 @@ import {
   InventoryState
 } from './types';
 
+// state 인터페이스
 export const initialState: InventoryState = {
   data: [],
   update: [],

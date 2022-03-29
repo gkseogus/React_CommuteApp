@@ -17,7 +17,7 @@ export type AppThunk = ActionCreator<
 export const fetchRequest: AppThunk = (item) => {
   return (dispatch: Dispatch): Action => {
     try {
-      return dispatch({ // 리듀서에게 apiData.data 전송
+      return dispatch({ 
         type: FETCH_SUCCESS,
         payload: item 
       });
@@ -29,11 +29,10 @@ export const fetchRequest: AppThunk = (item) => {
   };
 };
 
-// apiData를 받아와 reducer에게 데이터를 전송
 export const fetchRequestToUpdate: AppThunk = (item) => {
   return (dispatch: Dispatch): Action => {
     try {
-      return dispatch({ // 리듀서에게 apiData.data 전송
+      return dispatch({ 
         type: FETCH_UPDATE,
         payload: item 
       });

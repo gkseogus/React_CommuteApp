@@ -45,11 +45,12 @@ export const getSheet = async (key: string) => {
 // sheet는 구글로그인의 response 데이터
 export const converToState = (sheet: any) => {
   const data = sheet?.data?.[0]?.rowData;
+
   if (!data) {
     return [];
   }
-  // formattedValue는 엑셀 api가 뱉어주는 데이터 타입
-  // cell에 들어있는 값을 담고있는 프로퍼티다.
+
+  // formattedValue는 엑셀 api가 뱉어주는 데이터 타입,cell에 들어있는 값을 담고있는 프로퍼티다.
   return data.map((row: { values: { formattedValue: string }[] }) => ({
     key: row.values[6]?.formattedValue,
     team: row.values[0]?.formattedValue,

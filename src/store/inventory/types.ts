@@ -9,7 +9,7 @@ export interface Inventory {
   key: number;
 };
 
-// 전송 가능한 액션 유형 (type은 const로 하는게 좋다)
+// 전송 가능한 액션 유형
 export const FETCH_SUCCESS = '@@inventory/FETCH_SUCCESS'; // 성공적인 응답
 export const FETCH_UPDATE = '@@inventory/FETCH_UPDATE'; // 업데이트
 export const FETCH_ERROR = '@@inventory/FETCH_ERROR'; // 에러

@@ -29,12 +29,11 @@ declare global {
 
 
 // 개발자 콘솔에서 불러올 클라이언트 ID 및 API 키
-var CLIENT_ID =
-  '653145946472-jn4efggid62mt7ceunkrvehioalffl32.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyBG1aL8KaNnVAT4BLSNJRgrCrqrxXEi8pY';
+const CLIENT_ID = '653145946472-jn4efggid62mt7ceunkrvehioalffl32.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyBG1aL8KaNnVAT4BLSNJRgrCrqrxXEi8pY';
 
 // quickstart에서 사용하는 API용 API 탐색 문서 URL 배열
-var DISCOVERY_DOCS = [
+const DISCOVERY_DOCS = [
   'https://sheets.googleapis.com/$discovery/rest?version=v4',
 ];
 
@@ -47,11 +46,10 @@ export const AuthController = (_props: any) => {
   // 구글 로그인 상태가 변경되었을 때 호출되는 함수
   const updateSigninStatus = useCallback(
     (isSignedIn: boolean) => {
+      // 로그인 성공시 스프레트 시트의 워크시트를 조회 및 생성
       if (isSignedIn) {
-        // 로그인 성공시 스프레트 시트의 워크시트를 조회 및 생성
         trackPromise(
           loadTodaySheet().then((response: any) => {
-            // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
             dispatch(fetchRequest(converToState(response)));
             dispatch(fetchRequestToUpdate(converToState(response)))
           })
@@ -59,10 +57,19 @@ export const AuthController = (_props: any) => {
       } else {
         // 로그아웃시 redux store에서 값 clear
         fetchRequest([]);
+        fetchRequestToUpdate([]);
       }
     },
     [dispatch]
   );
+
+  // 로그아웃 버튼 클릭 시 sessionStorage의 모든 데이터 삭제
+  const handleSignoutClick = () => {
+    window.gapi.auth2.getAuthInstance().signOut();
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+    window.location.reload();
+  };
 
   useEffect(() => {
         // 구글 OAuth 모듈 초기 내용 설정
@@ -76,7 +83,6 @@ export const AuthController = (_props: any) => {
             });
     
             // 로그인 상태 변경을 위한 listen(연결 요청 대기 메소드)
-            // getOAuthInstance로 GoogleOAuth를 불러온다.
             window.gapi.auth2
               .getAuthInstance()
               .isSignedIn.listen(updateSigninStatus);
@@ -89,15 +95,7 @@ export const AuthController = (_props: any) => {
             alert(error);
           }
         });
-  }, [updateSigninStatus]) 
-  
-  // 로그아웃 버튼 클릭 시 sessionStorage의 모든 데이터 삭제
-  const handleSignoutClick = () => {
-    window.gapi.auth2.getAuthInstance().signOut();
-    window.sessionStorage.clear();
-    window.localStorage.clear();
-    window.location.reload();
-  };
+  }, [updateSigninStatus]);
 
   return (
     <div key={'GL'}>

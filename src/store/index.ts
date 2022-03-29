@@ -10,7 +10,6 @@ import { RouterState } from 'connected-react-router';
 
 // ApplicationState: store의 상태
 export interface ApplicationState {
-  // 리듀서의 inventory 상태가 여기에 저장 -> app 보면  store에 사용하고있음
   inventory: InventoryState;
   router: RouterState;
 };

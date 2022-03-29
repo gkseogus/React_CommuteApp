@@ -62,6 +62,7 @@ const useCheckInOutData = () => {
 const UserButton = (_props: any) => {
   const dispatch = useDispatch();
   const checkInOut = useCheckInOutData();
+
   // 버튼의 disable 활성화 상태 값 true이면 비활성화, false이면 활성화
   const checkInButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
   const companyWorkButtonDisaled = !window.sessionStorage.user_id || checkInOut.isCheckIn;
@@ -136,6 +137,7 @@ const UserButton = (_props: any) => {
     }
   };
 
+  // 회사 출근 버튼
   const companyWork = async () => {
     const checkInAlert = window.confirm('회사 출근하시겠습니까?');
     if(checkInAlert){
@@ -145,7 +147,6 @@ const UserButton = (_props: any) => {
       const userName = window.sessionStorage.user_name;
       const attendanceDate = moment().format('YYYY MM월 DD일, HH:mm:ss');
 
-      // 로그인 사용자의 id를 조회해 팀 값을 결정
       let team = '';
       for (let i = 0; i < teamDate.length; i++) {
         if (teamDate[i].key === userEmail) {
@@ -200,6 +201,7 @@ const UserButton = (_props: any) => {
     }
   };
 
+  // 재택 퇴근
   const reverseDisable = async () => {
     if(checkInOut.data?.homeWork === '재택'){
       confirmAlert({
@@ -209,10 +211,23 @@ const UserButton = (_props: any) => {
           {
             label: '변경',
             onClick: async () => {
-              window.localStorage.setItem('user_workState', '회사');
-              const userEmail = window.sessionStorage.user_email;
               // moment 연산을 위한 변수 재지정
               let leaveDate = moment(new Date());
+              const userEmail = window.sessionStorage.user_email;
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+
+              // 퇴근시간 - 출근시간
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss'));
+
+              // 시간차이
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+
+              // 시간으로만 근무상태를 판별하기 위한 변수
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState = workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+
+              window.localStorage.setItem('user_workState', '회사');
               
               // 출근 날짜와 퇴근 날짜가 다르면 퇴근 날짜를 23시 59분 59초로 설정
               // toDate = moment 객체를 날짜 객체로 변환
@@ -222,21 +237,7 @@ const UserButton = (_props: any) => {
                 date.setMinutes(59);
                 date.setSeconds(59);
                 leaveDate = moment(date);
-              }
-
-              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-
-              // 퇴근시간 - 출근시간
-              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-              );
-              const momentDuration = moment.duration(subtractTime);
-              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-          
-              // 시간으로만 근무상태를 판별하기 위한 변수
-              const workHours = Math.floor(momentDuration.asHours());
-              const workState =
-                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+              };
       
                   const sheetId = moment().format('YYYY-MM-DD');
                   try {
@@ -281,10 +282,15 @@ const UserButton = (_props: any) => {
           {
             label: '변경안함',
             onClick: async () => {
-              window.localStorage.setItem('user_workState', '재택');
-              const userEmail = window.sessionStorage.user_email;
-  
               let leaveDate = moment(new Date());
+              const userEmail = window.sessionStorage.user_email;
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss'));
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+              const workHours = Math.floor(momentDuration.asHours());
+
+              window.localStorage.setItem('user_workState', '재택');
           
               if (moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate().getDate() !== leaveDate.toDate().getDate()) {
                 const date = moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate();
@@ -292,62 +298,54 @@ const UserButton = (_props: any) => {
                 date.setMinutes(59);
                 date.setSeconds(59);
                 leaveDate = moment(date);
-              }
+              };
 
-              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-              
-              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-              );
-              const momentDuration = moment.duration(subtractTime);
-              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-          
-              const workHours = Math.floor(momentDuration.asHours());
-              const workState =
-                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류'
-                  const sheetId = moment().format('YYYY-MM-DD');
-                  try {
-                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                      valueInputOption: 'USER_ENTERED',
-                      data: [
-                        {
-    
-                          range: `'${sheetId}'!D${index}:H${index}`,
-                          values: [[
-                            leaveDateFormat, 
-                            time, 
-                            workState, 
-                            userEmail,
-                            '재택'
-                          ]],
-                        },
-                      ],
+              const workState = workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류'
+              const sheetId = moment().format('YYYY-MM-DD');
+              try {
+                const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                  spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                  valueInputOption: 'USER_ENTERED',
+                  data: [
+                    {
+
+                      range: `'${sheetId}'!D${index}:H${index}`,
+                      values: [[
+                        leaveDateFormat, 
+                        time, 
+                        workState, 
+                        userEmail,
+                        '재택'
+                      ]],
+                    },
+                  ],
+                })
+                );
+
+                const res = new Response();
+                if(res.status === 200) {
+                  trackPromise(
+                    loadTodaySheet().then((res: any) => {
+                        dispatch(fetchRequestToUpdate(converToState(res)));
                     })
-                    );
-
-                    const res = new Response();
-                    if(res.status === 200) {
-                      trackPromise(
-                        loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequestToUpdate(converToState(res)));
-                        })
-                      );
-                      trackPromise(
-                          getSheet(sheetId).then((sheet) => {
-                            dispatch(fetchRequest(converToState(sheet)));
-                        })
-                      );
-                    }
-                  } catch (err) {
-                    console.log('error:', err);
+                  );
+                  trackPromise(
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                    })
+                  );
                 }
+              } catch (err) {
+                console.log('error:', err);
+            }
             }
           }
         ]
       })
     }
+
+    // 회사 퇴근
     else if(checkInOut.data?.homeWork === '회사'){
       confirmAlert({
         title: `현재 회사 퇴근입니다.`,
@@ -356,135 +354,124 @@ const UserButton = (_props: any) => {
           {
             label: '변경',
             onClick: async () => {
-              window.localStorage.setItem('user_workState', '재택');
-              const userEmail = window.sessionStorage.user_email;
               let leaveDate = moment(new Date());
+              const userEmail = window.sessionStorage.user_email;
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss'));
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState = workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
           
-              // 퇴근날짜와 출근날짜가 다르다면
+              window.localStorage.setItem('user_workState', '재택');
+
               if (moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate().getDate() !== leaveDate.toDate().getDate()) {
                 const date = moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate();
                 date.setHours(23);
                 date.setMinutes(59);
                 date.setSeconds(59);
                 leaveDate = moment(date);
-              }
+              };
+              
+              const sheetId = moment().format('YYYY-MM-DD');
+              try {
+                const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                  spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                  valueInputOption: 'USER_ENTERED',
+                  data: [
+                    {
+                      range: `'${sheetId}'!D${index}:H${index}`,
+                      values: [[
+                        leaveDateFormat, 
+                        time, 
+                        workState, 
+                        userEmail,
+                        '재택'
+                      ]],
+                    },
+                  ],
+                })
+                );
 
-              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-            
-              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-              );
-              const momentDuration = moment.duration(subtractTime);
-              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-
-              const workHours = Math.floor(momentDuration.asHours());
-              const workState =
-                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
-                  const sheetId = moment().format('YYYY-MM-DD');
-                  try {
-                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                      valueInputOption: 'USER_ENTERED',
-                      data: [
-                        {
-                          range: `'${sheetId}'!D${index}:H${index}`,
-                          values: [[
-                            leaveDateFormat, 
-                            time, 
-                            workState, 
-                            userEmail,
-                            '재택'
-                          ]],
-                        },
-                      ],
+                const res = new Response();
+                if(res.status === 200) {
+                  trackPromise(
+                    loadTodaySheet().then((res: any) => {
+                        dispatch(fetchRequestToUpdate(converToState(res)));
                     })
-                    );
-
-                    const res = new Response();
-                    if(res.status === 200) {
-                      trackPromise(
-                        loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequestToUpdate(converToState(res)));
-                        })
-                      );
-                      trackPromise(
-                          getSheet(sheetId).then((sheet) => {
-                            dispatch(fetchRequest(converToState(sheet)));
-                        })
-                      );
-                    }
-                  } catch (err) {
-                    console.log('error:', err);
-                  }
+                  );
+                  trackPromise(
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                    })
+                  );
+                }
+              } catch (err) {
+                console.log('error:', err);
+              }
             }
           },        
           {
             label: '변경안함',
             onClick: async () => {
-              window.localStorage.setItem('user_workState', '회사');
-              const userEmail = window.sessionStorage.user_email;
-  
               let leaveDate = moment(new Date());
-          
+              const userEmail = window.sessionStorage.user_email;
+              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
+              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss'));
+              const momentDuration = moment.duration(subtractTime);
+              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
+              const workHours = Math.floor(momentDuration.asHours());
+              const workState = workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+
+              window.localStorage.setItem('user_workState', '회사');
+
               if (moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate().getDate() !== leaveDate.toDate().getDate()) {
                 const date = moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss').toDate();
                 date.setHours(23);
                 date.setMinutes(59);
                 date.setSeconds(59);
                 leaveDate = moment(date);
-              }
-              const leaveDateFormat = leaveDate.format('YYYY MM월 DD일, HH:mm:ss');
-              
+              };
 
-              const subtractTime = moment(leaveDate, 'YYYY MM월 DD일, HH:mm:ss').diff(
-                moment(checkInOut.data?.checkIn, 'YYYY MM월 DD일, HH:mm:ss')
-              );
-              const momentDuration = moment.duration(subtractTime);
-              const time = Math.floor(momentDuration.asHours()) + ' 시간' + moment.utc(subtractTime).format(' mm 분 ss 초');
-          
-              const workHours = Math.floor(momentDuration.asHours());
-              const workState =
-                workHours >= 9 ? '정상' : workHours < 9 ? '근무미달' : '근무상태 오류';
+              const sheetId = moment().format('YYYY-MM-DD');
+              try {
+                const index = checkInOut.data?.index ?? checkInOut.lastIndex;
+                await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
+                  spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
+                  valueInputOption: 'USER_ENTERED',
+                  data: [
+                    {
 
-                  const sheetId = moment().format('YYYY-MM-DD');
-                  try {
-                    const index = checkInOut.data?.index ?? checkInOut.lastIndex;
-                    await trackPromise(window.gapi.client.sheets.spreadsheets.values.batchUpdate({
-                      spreadsheetId: '1MCnYjLcdHg7Vu9GUSiOwWxSLDTK__PzNod5mCLnVIwQ',
-                      valueInputOption: 'USER_ENTERED',
-                      data: [
-                        {
-    
-                          range: `'${sheetId}'!D${index}:H${index}`,
-                          values: [[
-                            leaveDateFormat, 
-                            time, 
-                            workState, 
-                            userEmail,
-                            '회사'
-                          ]],
-                        },
-                      ],
+                      range: `'${sheetId}'!D${index}:H${index}`,
+                      values: [[
+                        leaveDateFormat, 
+                        time, 
+                        workState, 
+                        userEmail,
+                        '회사'
+                      ]],
+                    },
+                  ],
+                })
+                );
+                
+                const res = new Response();
+                if(res.status === 200) {
+                  trackPromise(
+                    loadTodaySheet().then((res: any) => {
+                        dispatch(fetchRequestToUpdate(converToState(res)));
                     })
-                    );
-                    
-                    const res = new Response();
-                    if(res.status === 200) {
-                      trackPromise(
-                        loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequestToUpdate(converToState(res)));
-                        })
-                      );
-                      trackPromise(
-                          getSheet(sheetId).then((sheet) => {
-                            dispatch(fetchRequest(converToState(sheet)));
-                        })
-                      );
-                    }
-                  } catch (err) {
-                    console.log('error:', err);
-                  }
+                  );
+                  trackPromise(
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                    })
+                  );
+                }
+              } catch (err) {
+                console.log('error:', err);
+              }
             }
           }
         ]
