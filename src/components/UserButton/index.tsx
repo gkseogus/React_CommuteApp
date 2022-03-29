@@ -9,8 +9,8 @@ import { teamDate } from '../../teamData';
 import { trackPromise } from 'react-promise-tracker';
 import { confirmAlert } from 'react-confirm-alert';
 import "react-confirm-alert/src/react-confirm-alert.css"; 
-import { converToState, loadTodaySheet } from '../GoogleSheet';
-import { fetchRequest } from '../../store/inventory/action';
+import { converToState, getSheet, loadTodaySheet } from '../GoogleSheet';
+import { fetchRequest, fetchRequestToUpdate } from '../../store/inventory/action';
 
 
 const Container = styled.div`
@@ -36,24 +36,24 @@ export declare const window: Window & {
 // 현재 로그인한 유저의 엑셀 row 정보가 담겨있음
 const useCheckInOutData = () => {
   const userEmail = window.sessionStorage.user_email;
-  const data = useSelector((state: ApplicationState) => state.inventory.data);
+  const update = useSelector((state: ApplicationState) => state.inventory.update);
 
   // 테이블 데이터중 key와 user_email 가 일치하는 항목을 탐색
-  const index = data.findIndex((row) => row.key === userEmail);
+  const index = update.findIndex((row) => row.key === userEmail);
 
   // 해당 유저와 일치하는 항목이 없는 경우
   if (index < 0) {
-    return { isCheckIn: false, isCheckOut: false, lastIndex: data.length + 1 };
+    return { isCheckIn: false, isCheckOut: false, lastIndex: update.length + 1 };
   }
 
   // 해당 유저와 일치하는 항목이 있는 경우
-  const isCheckIn = !!data[index].checkIn; // checkIn 컬럼에 데이터가 있으면 checkIn이 된 것으로 처리
-  const isCheckOut = !!data[index].checkOut; // checkOut 컬럼에 데이터가 있으면 checkOut 된 것으로 처리
+  const isCheckIn = !!update[index].checkIn; // checkIn 컬럼에 데이터가 있으면 checkIn이 된 것으로 처리
+  const isCheckOut = !!update[index].checkOut; // checkOut 컬럼에 데이터가 있으면 checkOut 된 것으로 처리
   return {
     isCheckIn,
     isCheckOut,
-    data: { index: index + 1, ...data[index] },
-    lastIndex: data.length + 1,
+    data: { index: index + 1, ...update[index] },
+    lastIndex: update.length + 1,
   };
 
   // index + 1 해주는 이유는 스프레드 시트의 index 번호는 1번부터 시작해서 맞춰줘야함
@@ -118,8 +118,11 @@ const UserButton = (_props: any) => {
         if(res.status === 200) {
           trackPromise(
             loadTodaySheet().then((res: any) => {
-                dispatch(fetchRequest(converToState(res)));
+              dispatch(fetchRequestToUpdate(converToState(res)));
             }));
+          getSheet(sheetId).then((sheet) => {
+            dispatch(fetchRequest(converToState(sheet)));
+          });
         }
       } catch (err) {
         console.log('error:', err);
@@ -176,8 +179,11 @@ const UserButton = (_props: any) => {
         if(res.status === 200) {
           trackPromise(
             loadTodaySheet().then((res: any) => {
-                dispatch(fetchRequest(converToState(res)));
+                dispatch(fetchRequestToUpdate(converToState(res)));
             }));
+          getSheet(sheetId).then((sheet) => {
+            dispatch(fetchRequest(converToState(sheet)));
+          });
         }
       } catch (err) {
         console.log('error:', err);
@@ -252,8 +258,11 @@ const UserButton = (_props: any) => {
                     if(res.status === 200) {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequest(converToState(res)));
+                            dispatch(fetchRequestToUpdate(converToState(res)));
                         }));
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                      });
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -313,8 +322,11 @@ const UserButton = (_props: any) => {
                     if(res.status === 200) {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequest(converToState(res)));
+                            dispatch(fetchRequestToUpdate(converToState(res)));
                         }));
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                      });
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -381,8 +393,11 @@ const UserButton = (_props: any) => {
                     if(res.status === 200) {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequest(converToState(res)));
+                            dispatch(fetchRequestToUpdate(converToState(res)));
                         }));
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                      });
                     }
                   } catch (err) {
                     console.log('error:', err);
@@ -443,8 +458,11 @@ const UserButton = (_props: any) => {
                     if(res.status === 200) {
                       trackPromise(
                         loadTodaySheet().then((res: any) => {
-                            dispatch(fetchRequest(converToState(res)));
+                            dispatch(fetchRequestToUpdate(converToState(res)));
                         }));
+                      getSheet(sheetId).then((sheet) => {
+                        dispatch(fetchRequest(converToState(sheet)));
+                      });
                     }
                   } catch (err) {
                     console.log('error:', err);
