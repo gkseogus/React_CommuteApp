@@ -4,7 +4,7 @@ import { GoogleLogout } from 'react-google-login';
 import { trackPromise } from 'react-promise-tracker';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { fetchRequest } from '../../store/inventory/action';
+import { fetchRequest, fetchRequestToUpdate } from '../../store/inventory/action';
 import { converToState, loadTodaySheet } from '../GoogleSheet';
 
 const LoginContain = styled.div`
@@ -53,6 +53,7 @@ export const AuthController = (_props: any) => {
           loadTodaySheet().then((response: any) => {
             // 불러온 스프레트 시트를 Inventory interface에 맞게 파싱하고 redux store에 전달
             dispatch(fetchRequest(converToState(response)));
+            dispatch(fetchRequestToUpdate(converToState(response)))
           })
         );
       } else {
