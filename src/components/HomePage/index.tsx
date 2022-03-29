@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import moment from 'moment';
 import { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
+import { trackPromise } from 'react-promise-tracker';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { ApplicationState } from '../../store';
@@ -149,6 +150,11 @@ const HomePage = (_props: any) => {
     (state: ApplicationState) => state.inventory.data
   )
   
+  // 지난 날짜, 현재 날짜에 대한 유저 검색
+  const data = (targetData ?? rootData).filter(
+    (i) => !name || i.user.includes(name)
+  );
+
   useEffect(() => {
     if(window.sessionStorage.length === 0){
       history.push('/login');
@@ -161,27 +167,24 @@ const HomePage = (_props: any) => {
     // 날짜를 선택하지 않을 경우
     if (!time) {
       const todayKey = moment().format('YYYY-MM-DD');
-      getSheet(todayKey).then((sheet) => {
-        dispatch(fetchRequest(converToState(sheet)));
-      });
+      trackPromise(
+        getSheet(todayKey).then((sheet) => {
+          dispatch(fetchRequest(converToState(sheet)));
+        })
+      );
     }
 
     // 날짜를 선택할 경우
     else {
       const sheetKey = time.format('YYYY-MM-DD');
-      getSheet(sheetKey).then((sheet) => {
-        dispatch(fetchRequest(converToState(sheet)));
-      });
+      trackPromise(
+        getSheet(sheetKey).then((sheet) => {
+          dispatch(fetchRequest(converToState(sheet)));
+        })
+      );
     }
   }, [dispatch, history, time]);
 
-  // 지난 날짜, 현재 날짜에 대한 유저 검색
-  // targetData는 지난 날짜 데이터를 보여주는 상태값
-  const data = (targetData ?? rootData).filter(
-    (i) => !name || i.user.includes(name)
-  );
-
-  // 이름, 날짜 필터링 적용을 위해서 UserButton, UserSearch 컴포넌트를 HomePage로 이동
   return (
     <div key={'HP'}>
       <UserButton />
