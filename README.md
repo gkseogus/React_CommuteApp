@@ -12,12 +12,3 @@ This Application is a boilerplate for Type Safe redux Applications. React + Redu
 ### 4. 출퇴근 기능
 ### 5. 구글 로그인 기능 구현
 ### 6. 현재 유저 이름 출력
-
-## Setup
-
-```
-npm install
-
-npm run start
-
-```
