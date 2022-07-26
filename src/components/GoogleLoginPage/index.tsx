@@ -14,7 +14,7 @@ const Container = styled.div`
   background-size: cover;
 `
 
-const HnineFont = styled.h1`
+const Front = styled.h1`
   font-size: 200px;
   font-weight: 600;
   text-align: center;
@@ -54,7 +54,7 @@ const LoginPage = (res: any) => {
 
     return (
       <Container>
-        <HnineFont>HNINE</HnineFont>
+        <Front>Front</Front>
         <GoogleLogin
           clientId={CLIENT_ID}
           onSuccess={handleAuthClick}
