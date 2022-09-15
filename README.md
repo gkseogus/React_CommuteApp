@@ -85,5 +85,11 @@ A : 팀명, B : 사용자명, C : 체크인, D : 체크아웃, E : 근무시간,
 * 시트 권한 테스트
 1. 시트 권한 없는 사용자가 접속시 시트 데이터가 출력되지 않는지 확인
 2.  Oauth 권한 없는 사용자가 접속시 로그인이 되는지 확인
+
+# Web Deployment
+* AWS - Amplify 사용
+
+도메인 구축 및 운영 서버 분리
+
 # Demo
 https://user-images.githubusercontent.com/76561461/190063666-79458aa3-8e6c-4116-bbbc-47039047cfd0.mp4
