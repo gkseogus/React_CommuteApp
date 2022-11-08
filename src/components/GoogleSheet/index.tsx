@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 export const loadTodaySheet = async () => {
-  const todayKey = moment().format('YYYY-MM-DD');
+  const todayKey: string = moment().format('YYYY-MM-DD');
 
   // 오늘 날짜에 해당하는 시트를 조회
   const todaySheet = await getSheet(todayKey);
@@ -23,12 +23,12 @@ export const loadTodaySheet = async () => {
     }
   );
   return await getSheet(todayKey);
-}
+};
 
 // ggapi.client가 init되었는지 검사 -> OAuth가 init 되기 전에 실행되면 에러남
 export const checkGapi = () => {
   return window.gapi.client != null;
-}
+};
 
 // sheet를 조회
 export const getSheet = async (key: string) => {
@@ -40,7 +40,7 @@ export const getSheet = async (key: string) => {
   });
   // title과 Key 가 매칭되는 시트 찾기 -> 이때 ket는 sheetKey 변수 (오늘 날짜 데이터를 가져오기 위함)
   return res.result.sheets.find((sheet: any) => sheet.properties.title === key);
-}
+};
 
 // sheet는 구글로그인의 response 데이터
 export const converToState = (sheet: any) => {
@@ -59,6 +59,6 @@ export const converToState = (sheet: any) => {
     checkOut: row.values[3]?.formattedValue,
     workTime: row.values[4]?.formattedValue,
     workState: row.values[5]?.formattedValue,
-    homeWork: row.values[7]?.formattedValue
+    homeWork: row.values[7]?.formattedValue,
   }));
-}
+};
