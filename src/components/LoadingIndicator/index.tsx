@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePromiseTracker } from 'react-promise-tracker';
+import { BallTriangle } from 'react-loader-spinner';
 import styled from 'styled-components';
-import { BallTriangle }  from 'react-loader-spinner';
 
 const Container = styled.div`
   position: absolute;
@@ -10,26 +10,19 @@ const Container = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const LoadingIndicator = (_props: any) => {
+const LoadingText = styled.h1`
+  font-size: 600;
+`;
+
+const LoadingIndicator = () => {
   const { promiseInProgress } = usePromiseTracker();
 
   return (
-    <div key={'LI'}>
-      <Container>
-        {
-          promiseInProgress && 
-          <BallTriangle 
-            color='black'
-          >
-          </BallTriangle>
-        }
-        {
-          promiseInProgress && 
-          <h1>loading...</h1>
-        }
-      </Container>
-    </div>
-    );
-}
+    <Container>
+      {promiseInProgress && <BallTriangle color="black"></BallTriangle>}
+      {promiseInProgress && <LoadingText>loading...</LoadingText>}
+    </Container>
+  );
+};
 
 export default React.memo(LoadingIndicator);
