@@ -3,10 +3,9 @@ import {
   FETCH_ERROR,
   FETCH_SUCCESS,
   FETCH_UPDATE,
-  InventoryState
+  InventoryState,
 } from './types';
 
-// state 인터페이스
 export const initialState: InventoryState = {
   data: [],
   update: [],
