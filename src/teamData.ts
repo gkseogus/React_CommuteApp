@@ -1,4 +1,4 @@
-export const teamDate = [
+const teamData = [
   {
     key: 'fbzbffldj@gmail.com',
     team: 'R&D',
@@ -8,3 +8,5 @@ export const teamDate = [
     team: 'CM',
   },
 ];
+
+export default teamData;
