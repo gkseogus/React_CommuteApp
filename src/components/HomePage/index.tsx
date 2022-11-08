@@ -1,19 +1,33 @@
+import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
 import moment from 'moment';
 import { Moment } from 'moment';
-import React, { useEffect, useState } from 'react';
 import { trackPromise } from 'react-promise-tracker';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { Inventory } from '../../store/inventory/types';
 import { ApplicationState } from '../../store';
 import { fetchRequest } from '../../store/inventory/action';
-import HomeDatePicker from '../DatePicker';
+import HomeDatePicker from '../HomeDatePicker';
 import { checkGapi, converToState, getSheet } from '../GoogleSheet';
 import UserButton from '../UserButton';
 import UserSearch from '../UserSearch';
 
-const columns: any = [
+interface FiltersFace {
+  text: string;
+  value: string;
+}
+
+interface ColumnsFace {
+  title: string;
+  dataIndex: string;
+  defaultSortOrder: string;
+  filters: FiltersFace[];
+}
+
+/** Columns option */
+const columns: ColumnsFace[] | any = [
   {
     title: '팀',
     dataIndex: 'team',
@@ -63,17 +77,15 @@ const columns: any = [
         value: '경영지원',
       },
     ],
-    // specify the condition of filtering result
-    // here is that finding the name started with `value`
-    onFilter: (value: any, record: { team: string | any[] }) =>
-      record.team.indexOf(value) === 0,
+    onFilter: (value: string, record: { team: string | string[] }): boolean => {
+      return record.team.indexOf(value) === 0;
+    },
   },
   {
     title: '사용자',
     dataIndex: 'user',
     defaultSortOrder: 'user',
-    sorter: (a: { user: string }, b: { user: string }) => {
-      // 삼항연산자, a<b이면 1, elseIf(a===b)이면 0, else이면 -1
+    sorter: (a: { user: string }, b: { user: string }): number => {
       return a < b ? 1 : a === b ? 0 : -1;
     },
   },
@@ -81,7 +93,7 @@ const columns: any = [
     title: '체크인',
     dataIndex: 'checkIn',
     defaultSortOrder: 'checkIn',
-    sorter: (a: { checkIn: string }, b: { checkIn: string }) => {
+    sorter: (a: { checkIn: string }, b: { checkIn: string }): number => {
       return a.checkIn < b.checkIn ? 1 : a.checkIn === b.checkIn ? 0 : -1;
     },
   },
@@ -89,7 +101,7 @@ const columns: any = [
     title: '체크아웃',
     dataIndex: 'checkOut',
     defaultSortOrder: 'checkOut',
-    sorter: (a: { checkIn: string }, b: { checkIn: string }) => {
+    sorter: (a: { checkIn: string }, b: { checkIn: string }): number => {
       return a.checkIn < b.checkIn ? 1 : a.checkIn === b.checkIn ? 0 : -1;
     },
   },
@@ -111,8 +123,10 @@ const columns: any = [
         value: '정상',
       },
     ],
-    onFilter: (value: any, record: { workState: string | any[] }) =>
-      record.workState.indexOf(value) === 0,
+    onFilter: (
+      value: string,
+      record: { workState: string | string[] }
+    ): boolean => record.workState.indexOf(value) === 0,
   },
   {
     title: '재택 여부',
@@ -127,58 +141,51 @@ const columns: any = [
         value: '재택',
       },
     ],
-    onFilter: (value: any, record: { homeWork: string | any[] }) =>
-      record.homeWork.indexOf(value) === 0,
+    onFilter: (
+      value: string,
+      record: { homeWork: string | string[] }
+    ): boolean => record.homeWork.indexOf(value) === 0,
   },
 ];
 
-const onChange = (pagination: any, filters: any, sorter: any, extra: any) => {
-  console.log('params', pagination, filters, sorter, extra);
-};
-
 const HomePage = (_props: any) => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState<string>('');
   const [time, setTime] = useState<Moment>();
-  const history = useHistory();
+  const history = useNavigate();
   const dispatch = useDispatch();
 
-  const rootData = useSelector(
+  const rootData: Inventory[] = useSelector(
     (state: ApplicationState) => state.inventory.update
   );
 
-  const targetData = useSelector(
+  const targetData: Inventory[] = useSelector(
     (state: ApplicationState) => state.inventory.data
-  )
-  
-  // 지난 날짜, 현재 날짜에 대한 유저 검색
-  const data = (targetData ?? rootData).filter(
+  );
+
+  /** Search for users in the past and current dates */
+  const data: Inventory[] = (targetData ?? rootData).filter(
     (i) => !name || i.user.includes(name)
   );
 
   useEffect(() => {
-    if(window.sessionStorage.length === 0){
-      history.push('/login');
-    }
-
-    // 스프레드 시트 api 가 로드되지 않았으면 Skip
+    /** Skip if spreadsheet api is not loaded */
     if (!checkGapi()) {
       return;
     }
-    // 날짜를 선택하지 않을 경우
+
+    /** If you don't select the date */
     if (!time) {
-      const todayKey = moment().format('YYYY-MM-DD');
+      const todayKey: string = moment().format('YYYY-MM-DD');
       trackPromise(
-        getSheet(todayKey).then((sheet) => {
+        getSheet(todayKey).then((sheet: string) => {
           dispatch(fetchRequest(converToState(sheet)));
         })
       );
-    }
-
-    // 날짜를 선택할 경우
-    else {
-      const sheetKey = time.format('YYYY-MM-DD');
+    } else {
+      /** If you select a date */
+      const sheetKey: string = time.format('YYYY-MM-DD');
       trackPromise(
-        getSheet(sheetKey).then((sheet) => {
+        getSheet(sheetKey).then((sheet: string) => {
           dispatch(fetchRequest(converToState(sheet)));
         })
       );
@@ -186,16 +193,11 @@ const HomePage = (_props: any) => {
   }, [dispatch, history, time]);
 
   return (
-    <div key={'HP'}>
+    <div>
       <UserButton />
-      <HomeDatePicker
-        onChange={(moment: Moment) =>
-          // 날짜가 선택되면 
-          setTime(moment)
-        }
-      />
+      <HomeDatePicker onChange={(moment: Moment) => setTime(moment)} />
       <UserSearch onSearch={setName} />
-      <Table columns={columns} dataSource={data} onChange={onChange} />
+      <Table columns={columns} dataSource={data} />
     </div>
   );
 };
