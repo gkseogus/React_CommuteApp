@@ -15,6 +15,7 @@ const LoginContain = styled.div`
   position: fixed;
   right: 330px;
 `;
+
 const LoginUser = styled.div`
   position: fixed;
   right: 450px;
@@ -32,7 +33,7 @@ declare global {
 const API_KEY = 'AIzaSyCXiff43VvXMTWyOCTxpe8TZjbNY_yG950';
 const CLIENT_ID =
   '653145946472-oqs3s8edni5jt3romcdqm18cjtmsq4vi.apps.googleusercontent.com';
-/** Array of API navigation document URLs for APIs used by quickstart */
+
 const DISCOVERY_DOCS = [
   'https://sheets.googleapis.com/$discovery/rest?version=v4',
 ];
@@ -120,6 +121,7 @@ const AuthController = (_props: any) => {
     uxMode="redirect"
     autoLoad={false}
    **/
+
   return (
     <div>
       <LoginUser>{userNameText}</LoginUser>
