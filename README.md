@@ -91,5 +91,9 @@ A : 팀명, B : 사용자명, C : 체크인, D : 체크아웃, E : 근무시간,
 
 도메인 구축 및 운영 서버 분리
 
+# Code Convention
+
+Google Code Convention 적용
+
 # Demo
 https://user-images.githubusercontent.com/76561461/190063666-79458aa3-8e6c-4116-bbbc-47039047cfd0.mp4
